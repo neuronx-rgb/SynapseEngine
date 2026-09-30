@@ -1,0 +1,18 @@
+Order Management System Requirements
+======================================
+
+1. Customers can create orders by selecting products from the catalog.
+2. Each order must have a unique order ID generated automatically.
+3. Orders with a total value over $500 require manager approval before processing.
+4. Premium customers receive free shipping on all orders regardless of order value.
+5. Standard customers pay a flat $9.99 shipping fee per order.
+6. Orders can be in one of these states: pending, approved, processing, shipped, delivered, cancelled.
+7. Customers can cancel an order only if it has not yet been shipped.
+8. The system must send an email confirmation within 5 minutes of order placement.
+9. Payment processing must complete within 30 seconds or the order is marked as failed.
+10. Each product in the catalog must have a name, description, price, and stock quantity.
+11. The system must prevent ordering products with zero stock quantity.
+12. Order history must be retained for at least 7 years for compliance purposes.
+13. Managers receive a notification when an order requiring approval is placed.
+14. Premium customer status is granted when total lifetime spending exceeds $5,000.
+15. The system must generate a monthly sales report exportable as CSV or PDF.

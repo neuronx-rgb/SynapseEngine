@@ -1,0 +1,145 @@
+{
+  "triggers": ["order", "approval", "premium", "shipping", "catalog"],
+  "response": {
+    "requirements": [
+      {
+        "req_id": "REQ-001",
+        "text": "Customers can create orders by selecting products from the catalog.",
+        "source_sentence": "Customers can create orders by selecting products from the catalog.",
+        "entities": ["customer", "order", "product", "catalog"],
+        "actions": ["create", "select"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-002",
+        "text": "Each order must have a unique order ID generated automatically.",
+        "source_sentence": "Each order must have a unique order ID generated automatically.",
+        "entities": ["order", "order_id"],
+        "actions": ["generate"],
+        "constraints": [
+          {"subject": "order", "attribute": "order_id", "op": "==", "value": "unique_auto"}
+        ]
+      },
+      {
+        "req_id": "REQ-003",
+        "text": "Orders with a total value over $500 require manager approval before processing.",
+        "source_sentence": "Orders with a total value over $500 require manager approval before processing.",
+        "entities": ["order", "manager", "approval"],
+        "actions": ["approve", "process"],
+        "constraints": [
+          {"subject": "order", "attribute": "total_value", "op": ">", "value": 500}
+        ]
+      },
+      {
+        "req_id": "REQ-004",
+        "text": "Premium customers receive free shipping on all orders regardless of order value.",
+        "source_sentence": "Premium customers receive free shipping on all orders regardless of order value.",
+        "entities": ["customer", "order", "shipping"],
+        "actions": ["receive"],
+        "constraints": [
+          {"subject": "shipping", "attribute": "fee", "op": "==", "value": 0}
+        ]
+      },
+      {
+        "req_id": "REQ-005",
+        "text": "Standard customers pay a flat $9.99 shipping fee per order.",
+        "source_sentence": "Standard customers pay a flat $9.99 shipping fee per order.",
+        "entities": ["customer", "order", "shipping"],
+        "actions": ["pay"],
+        "constraints": [
+          {"subject": "shipping", "attribute": "fee", "op": "==", "value": 9.99}
+        ]
+      },
+      {
+        "req_id": "REQ-006",
+        "text": "Orders can be in one of these states: pending, approved, processing, shipped, delivered, cancelled.",
+        "source_sentence": "Orders can be in one of these states: pending, approved, processing, shipped, delivered, cancelled.",
+        "entities": ["order", "status"],
+        "actions": ["transition"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-007",
+        "text": "Customers can cancel an order only if it has not yet been shipped.",
+        "source_sentence": "Customers can cancel an order only if it has not yet been shipped.",
+        "entities": ["customer", "order"],
+        "actions": ["cancel"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-008",
+        "text": "The system must send an email confirmation within 5 minutes of order placement.",
+        "source_sentence": "The system must send an email confirmation within 5 minutes of order placement.",
+        "entities": ["system", "email", "order"],
+        "actions": ["send"],
+        "constraints": [
+          {"subject": "email_confirmation", "attribute": "delay_minutes", "op": "<=", "value": 5}
+        ]
+      },
+      {
+        "req_id": "REQ-009",
+        "text": "Payment processing must complete within 30 seconds or the order is marked as failed.",
+        "source_sentence": "Payment processing must complete within 30 seconds or the order is marked as failed.",
+        "entities": ["payment", "order"],
+        "actions": ["complete", "mark"],
+        "constraints": [
+          {"subject": "payment", "attribute": "timeout_seconds", "op": "<=", "value": 30}
+        ]
+      },
+      {
+        "req_id": "REQ-010",
+        "text": "Each product in the catalog must have a name, description, price, and stock quantity.",
+        "source_sentence": "Each product in the catalog must have a name, description, price, and stock quantity.",
+        "entities": ["product", "catalog"],
+        "actions": ["have"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-011",
+        "text": "The system must prevent ordering products with zero stock quantity.",
+        "source_sentence": "The system must prevent ordering products with zero stock quantity.",
+        "entities": ["system", "product", "order"],
+        "actions": ["prevent"],
+        "constraints": [
+          {"subject": "product", "attribute": "stock_quantity", "op": ">", "value": 0}
+        ]
+      },
+      {
+        "req_id": "REQ-012",
+        "text": "Order history must be retained for at least 7 years for compliance purposes.",
+        "source_sentence": "Order history must be retained for at least 7 years for compliance purposes.",
+        "entities": ["order", "history"],
+        "actions": ["retain"],
+        "constraints": [
+          {"subject": "order_history", "attribute": "retention_years", "op": ">=", "value": 7}
+        ]
+      },
+      {
+        "req_id": "REQ-013",
+        "text": "Managers receive a notification when an order requiring approval is placed.",
+        "source_sentence": "Managers receive a notification when an order requiring approval is placed.",
+        "entities": ["manager", "notification", "order"],
+        "actions": ["receive", "notify"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-014",
+        "text": "Premium customer status is granted when total lifetime spending exceeds $5,000.",
+        "source_sentence": "Premium customer status is granted when total lifetime spending exceeds $5,000.",
+        "entities": ["customer", "status"],
+        "actions": ["grant"],
+        "constraints": [
+          {"subject": "customer", "attribute": "lifetime_spending", "op": ">", "value": 5000}
+        ]
+      },
+      {
+        "req_id": "REQ-015",
+        "text": "The system must generate a monthly sales report exportable as CSV or PDF.",
+        "source_sentence": "The system must generate a monthly sales report exportable as CSV or PDF.",
+        "entities": ["system", "report"],
+        "actions": ["generate", "export"],
+        "constraints": []
+      }
+    ]
+  }
+}

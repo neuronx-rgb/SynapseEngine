@@ -1,0 +1,18 @@
+Salon Appointment Booking System
+==================================
+
+The system should be fast and intuitive for both staff and customers. Users can create
+accounts and log in to book appointments. The booking process should be secure.
+
+1. Customers can book, reschedule, or cancel appointments as needed.
+2. The system must handle a reasonable number of concurrent users efficiently.
+3. Staff can manage their availability and view upcoming appointments.
+4. Customers can upload files such as reference photos for their appointment.
+5. The system should send reminders to customers at an appropriate time before appointments.
+6. Payment can be made online or in-person, and the system should handle it appropriately.
+7. The admin can generate reports quickly.
+8. Customer data should be stored securely and kept for as long as necessary.
+9. The system must be scalable to support future growth.
+10. New features should be easy to add without breaking existing functionality.
+11. Users and/or staff can leave reviews after appointments.
+12. The system must not be unavailable during business hours.

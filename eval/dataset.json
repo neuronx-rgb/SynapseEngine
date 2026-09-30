@@ -1,0 +1,109 @@
+{
+  "version": "1.0",
+  "description": "Synapse Engine evaluation dataset with 12 requirement documents containing planted flaws.",
+  "documents": [
+    {
+      "id": "eval-001",
+      "name": "Email uniqueness conflict",
+      "text": "Every user account must have a globally unique email address. Family members can share a single email address across multiple accounts.",
+      "ground_truth": [
+        {"type": "conflict", "severity": "blocking", "involved_req_ids_contains": ["REQ-001", "REQ-002"]}
+      ]
+    },
+    {
+      "id": "eval-002",
+      "name": "Vague performance terms",
+      "text": "The system must be fast, scalable, and secure. Users should be able to book appointments quickly.",
+      "ground_truth": [
+        {"type": "ambiguity", "severity": "blocking", "description_contains": "fast"},
+        {"type": "ambiguity", "severity": "blocking", "description_contains": "scalable"},
+        {"type": "ambiguity", "severity": "blocking", "description_contains": "secure"},
+        {"type": "ambiguity", "severity": "blocking", "description_contains": "quickly"}
+      ]
+    },
+    {
+      "id": "eval-003",
+      "name": "Double negation",
+      "text": "The system must not be unavailable during business hours. Users must not be unable to access their data.",
+      "ground_truth": [
+        {"type": "ambiguity", "severity": "blocking", "description_contains": "unavailable"},
+        {"type": "ambiguity", "severity": "blocking", "description_contains": "double negation"}
+      ]
+    },
+    {
+      "id": "eval-004",
+      "name": "And/or scope ambiguity",
+      "text": "Users and/or administrators can delete accounts. The system must notify staff and/or managers on errors.",
+      "ground_truth": [
+        {"type": "ambiguity", "severity": "warning", "description_contains": "and/or"},
+        {"type": "ambiguity", "severity": "warning", "description_contains": "and/or"}
+      ]
+    },
+    {
+      "id": "eval-005",
+      "name": "Z3 numeric conflict: order approval threshold",
+      "text": "Orders above $1000 require manager approval. Orders above $500 must be automatically approved without manager review.",
+      "ground_truth": [
+        {"type": "conflict", "severity": "blocking", "description_contains": "conflict"}
+      ]
+    },
+    {
+      "id": "eval-006",
+      "name": "Missing auth requirements",
+      "text": "Users can view and edit their profile. Users can create posts and comments. Posts are public by default.",
+      "ground_truth": [
+        {"type": "incompleteness", "severity": "warning", "description_contains": "auth"}
+      ]
+    },
+    {
+      "id": "eval-007",
+      "name": "Missing error handling",
+      "text": "The system accepts file uploads up to 10MB. Files are stored in cloud storage. Users can download their files.",
+      "ground_truth": [
+        {"type": "incompleteness", "severity": "warning", "description_contains": "error"}
+      ]
+    },
+    {
+      "id": "eval-008",
+      "name": "TBD placeholder",
+      "text": "The system must process payments via TBD payment gateway. Refunds will be handled as per TBD policy.",
+      "ground_truth": [
+        {"type": "ambiguity", "severity": "blocking", "description_contains": "TBD"},
+        {"type": "ambiguity", "severity": "blocking", "description_contains": "TBD"}
+      ]
+    },
+    {
+      "id": "eval-009",
+      "name": "Unclear pronoun",
+      "text": "When a manager approves an order, they must notify the customer. It should be sent within 1 hour.",
+      "ground_truth": [
+        {"type": "ambiguity", "severity": "blocking", "description_contains": "pronoun"}
+      ]
+    },
+    {
+      "id": "eval-010",
+      "name": "Near-synonym contradiction (free vs no cost)",
+      "text": "Premium members receive complimentary shipping on all orders. All orders incur a mandatory $5 handling fee regardless of membership status.",
+      "ground_truth": [
+        {"type": "conflict", "severity": "blocking", "description_contains": "shipping"}
+      ]
+    },
+    {
+      "id": "eval-011",
+      "name": "Should vs must modal weakness",
+      "text": "The system should encrypt user passwords. The system may store session tokens in cookies.",
+      "ground_truth": [
+        {"type": "ambiguity", "severity": "warning", "description_contains": "should"},
+        {"type": "ambiguity", "severity": "warning", "description_contains": "may"}
+      ]
+    },
+    {
+      "id": "eval-012",
+      "name": "Missing deletion/retention policy",
+      "text": "Users can create and manage their profiles. The system stores user activity logs. Administrators can export all data.",
+      "ground_truth": [
+        {"type": "incompleteness", "severity": "warning", "description_contains": "delete"}
+      ]
+    }
+  ]
+}

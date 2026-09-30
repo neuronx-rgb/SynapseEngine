@@ -1,0 +1,15 @@
+User Account & Email Management Requirements
+============================================
+
+1. Every user account must have a globally unique email address in the system.
+2. Email addresses must be validated using standard RFC 5322 format rules.
+3. Family members can share a single email address across multiple accounts.
+4. Users must verify their email address within 48 hours of registration.
+5. A user can change their email address up to 3 times per calendar year.
+6. The system must send password reset links to the user's registered email.
+7. Accounts inactive for more than 12 months must be automatically deactivated.
+8. Administrators can manually assign or reassign email addresses to any account.
+9. The system must log all email change events with timestamp and IP address.
+10. Users can set a secondary email address for notifications as needed.
+11. Email addresses must not be reused for 6 months after account deletion.
+12. The system should send users weekly digest emails if they opt in.

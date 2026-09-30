@@ -1,0 +1,15 @@
+{
+  "triggers": ["conflict", "semantic", "shared", "unique email", "family"],
+  "response": {
+    "issues": [
+      {
+        "issue_id": "ISS-L-001",
+        "issue_type": "conflict",
+        "severity": "blocking",
+        "involved_req_ids": ["REQ-001", "REQ-003"],
+        "description": "REQ-001 requires globally unique emails per account, but REQ-003 allows family members to share a single email across multiple accounts. These are mutually exclusive policies.",
+        "suggested_question": "Should email addresses be globally unique (one email = one account) or can family members share an email? Please specify the exact rule and any exceptions."
+      }
+    ]
+  }
+}

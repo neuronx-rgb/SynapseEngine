@@ -1,0 +1,127 @@
+{
+  "triggers": ["salon", "booking", "appointment", "staff", "fast", "scalable"],
+  "response": {
+    "requirements": [
+      {
+        "req_id": "REQ-001",
+        "text": "The system should be fast and responsive for both staff and customers.",
+        "source_sentence": "The system should be fast and intuitive for both staff and customers.",
+        "entities": ["system", "staff", "customer"],
+        "actions": [],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-002",
+        "text": "Users can create accounts and log in to the booking system.",
+        "source_sentence": "Users can create accounts and log in to book appointments.",
+        "entities": ["user", "account"],
+        "actions": ["create", "login"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-003",
+        "text": "The booking process must be secure.",
+        "source_sentence": "The booking process should be secure.",
+        "entities": ["booking"],
+        "actions": ["secure"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-004",
+        "text": "Customers can book, reschedule, or cancel appointments.",
+        "source_sentence": "Customers can book, reschedule, or cancel appointments as needed.",
+        "entities": ["customer", "appointment"],
+        "actions": ["book", "reschedule", "cancel"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-005",
+        "text": "The system must handle a reasonable number of concurrent users efficiently.",
+        "source_sentence": "The system must handle a reasonable number of concurrent users efficiently.",
+        "entities": ["system", "user"],
+        "actions": ["handle"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-006",
+        "text": "Staff can manage their availability and view upcoming appointments.",
+        "source_sentence": "Staff can manage their availability and view upcoming appointments.",
+        "entities": ["staff", "availability", "appointment"],
+        "actions": ["manage", "view"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-007",
+        "text": "Customers can upload files such as reference photos for their appointment.",
+        "source_sentence": "Customers can upload files such as reference photos for their appointment.",
+        "entities": ["customer", "file", "photo", "appointment"],
+        "actions": ["upload"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-008",
+        "text": "The system should send reminders to customers at an appropriate time before appointments.",
+        "source_sentence": "The system should send reminders to customers at an appropriate time before appointments.",
+        "entities": ["system", "customer", "reminder", "appointment"],
+        "actions": ["send"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-009",
+        "text": "Payment can be made online or in-person, and the system should handle it appropriately.",
+        "source_sentence": "Payment can be made online or in-person, and the system should handle it appropriately.",
+        "entities": ["payment", "system"],
+        "actions": ["handle"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-010",
+        "text": "The admin can generate reports quickly.",
+        "source_sentence": "The admin can generate reports quickly.",
+        "entities": ["admin", "report"],
+        "actions": ["generate"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-011",
+        "text": "Customer data should be stored securely and kept for as long as necessary.",
+        "source_sentence": "Customer data should be stored securely and kept for as long as necessary.",
+        "entities": ["customer", "data"],
+        "actions": ["store", "keep"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-012",
+        "text": "The system must be scalable to support future growth.",
+        "source_sentence": "The system must be scalable to support future growth.",
+        "entities": ["system"],
+        "actions": ["scale"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-013",
+        "text": "New features should be easy to add without breaking existing functionality.",
+        "source_sentence": "New features should be easy to add without breaking existing functionality.",
+        "entities": ["system", "feature"],
+        "actions": ["add"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-014",
+        "text": "Users and/or staff can leave reviews after appointments.",
+        "source_sentence": "Users and/or staff can leave reviews after appointments.",
+        "entities": ["user", "staff", "review", "appointment"],
+        "actions": ["leave"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-015",
+        "text": "The system must not be unavailable during business hours.",
+        "source_sentence": "The system must not be unavailable during business hours.",
+        "entities": ["system"],
+        "actions": ["available"],
+        "constraints": []
+      }
+    ]
+  }
+}

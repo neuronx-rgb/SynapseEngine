@@ -1,0 +1,115 @@
+{
+  "triggers": ["email", "account", "unique", "family", "share"],
+  "response": {
+    "requirements": [
+      {
+        "req_id": "REQ-001",
+        "text": "Every user account must have a globally unique email address in the system.",
+        "source_sentence": "Every user account must have a globally unique email address in the system.",
+        "entities": ["user", "account", "email"],
+        "actions": ["have", "validate"],
+        "constraints": [
+          {"subject": "email", "attribute": "uniqueness", "op": "==", "value": "globally_unique"}
+        ]
+      },
+      {
+        "req_id": "REQ-002",
+        "text": "Email addresses must be validated using standard RFC 5322 format rules.",
+        "source_sentence": "Email addresses must be validated using standard RFC 5322 format rules.",
+        "entities": ["email"],
+        "actions": ["validate"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-003",
+        "text": "Family members can share a single email address across multiple accounts.",
+        "source_sentence": "Family members can share a single email address across multiple accounts.",
+        "entities": ["family_member", "email", "account"],
+        "actions": ["share"],
+        "constraints": [
+          {"subject": "email", "attribute": "uniqueness", "op": "==", "value": "shared_allowed"}
+        ]
+      },
+      {
+        "req_id": "REQ-004",
+        "text": "Users must verify their email address within 48 hours of registration.",
+        "source_sentence": "Users must verify their email address within 48 hours of registration.",
+        "entities": ["user", "email"],
+        "actions": ["verify"],
+        "constraints": [
+          {"subject": "email_verification", "attribute": "deadline_hours", "op": "<=", "value": 48}
+        ]
+      },
+      {
+        "req_id": "REQ-005",
+        "text": "A user can change their email address up to 3 times per calendar year.",
+        "source_sentence": "A user can change their email address up to 3 times per calendar year.",
+        "entities": ["user", "email"],
+        "actions": ["change"],
+        "constraints": [
+          {"subject": "email_change", "attribute": "max_per_year", "op": "<=", "value": 3}
+        ]
+      },
+      {
+        "req_id": "REQ-006",
+        "text": "The system must send password reset links to the user's registered email.",
+        "source_sentence": "The system must send password reset links to the user's registered email.",
+        "entities": ["system", "password_reset", "email"],
+        "actions": ["send"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-007",
+        "text": "Accounts inactive for more than 12 months must be automatically deactivated.",
+        "source_sentence": "Accounts inactive for more than 12 months must be automatically deactivated.",
+        "entities": ["account"],
+        "actions": ["deactivate"],
+        "constraints": [
+          {"subject": "account", "attribute": "inactivity_months", "op": ">", "value": 12}
+        ]
+      },
+      {
+        "req_id": "REQ-008",
+        "text": "Administrators can manually assign or reassign email addresses to any account.",
+        "source_sentence": "Administrators can manually assign or reassign email addresses to any account.",
+        "entities": ["administrator", "email", "account"],
+        "actions": ["assign", "reassign"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-009",
+        "text": "The system must log all email change events with timestamp and IP address.",
+        "source_sentence": "The system must log all email change events with timestamp and IP address.",
+        "entities": ["system", "email_change", "audit_log"],
+        "actions": ["log"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-010",
+        "text": "Users can set a secondary email address for notifications as needed.",
+        "source_sentence": "Users can set a secondary email address for notifications as needed.",
+        "entities": ["user", "email", "notification"],
+        "actions": ["set"],
+        "constraints": []
+      },
+      {
+        "req_id": "REQ-011",
+        "text": "Email addresses must not be reused for 6 months after account deletion.",
+        "source_sentence": "Email addresses must not be reused for 6 months after account deletion.",
+        "entities": ["email", "account"],
+        "actions": ["reuse"],
+        "constraints": [
+          {"subject": "email", "attribute": "reuse_cooldown_months", "op": ">=", "value": 6}
+        ]
+      },
+      {
+        "req_id": "REQ-012",
+        "text": "The system should send users weekly digest emails if they opt in.",
+        "source_sentence": "The system should send users weekly digest emails if they opt in.",
+        "entities": ["system", "user", "email"],
+        "actions": ["send"],
+        "constraints": []
+      }
+    ]
+  }
+}

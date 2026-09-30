@@ -1,0 +1,142 @@
+{
+  "triggers": ["test", "test plan", "test cases", "TC-", "positive", "negative", "boundary"],
+  "response": {
+    "test_cases": [
+      {
+        "test_id": "TC-001",
+        "name": "Create order with total under $500 - no approval needed",
+        "category": "positive",
+        "req_ids": ["REQ-001", "REQ-002", "REQ-003"],
+        "description": "Customer creates an order with total value $450. Verify order is created with pending status and does NOT require approval.",
+        "input_data": {"customer_id": "C001", "items": [{"product_id": "P001", "quantity": 2, "unit_price": 225.0}]},
+        "expected_outcome": "Order created with status=pending, requires_approval=false"
+      },
+      {
+        "test_id": "TC-002",
+        "name": "Create order with total over $500 - requires approval",
+        "category": "positive",
+        "req_ids": ["REQ-003", "REQ-013"],
+        "description": "Customer creates an order with total value $600. Verify order requires manager approval and manager is notified.",
+        "input_data": {"customer_id": "C001", "items": [{"product_id": "P002", "quantity": 1, "unit_price": 600.0}]},
+        "expected_outcome": "Order created with requires_approval=true, manager notification sent"
+      },
+      {
+        "test_id": "TC-003",
+        "name": "Boundary: order exactly $500 - approval threshold",
+        "category": "boundary",
+        "req_ids": ["REQ-003"],
+        "description": "Create order with exactly $500.00. Boundary case: the rule is 'over $500' so $500.00 should NOT require approval.",
+        "input_data": {"customer_id": "C001", "total_value": 500.00},
+        "expected_outcome": "Order at exactly $500.00 does NOT require approval (rule is strictly >$500)"
+      },
+      {
+        "test_id": "TC-004",
+        "name": "Boundary: order at $500.01 - just above threshold",
+        "category": "boundary",
+        "req_ids": ["REQ-003"],
+        "description": "Create order with $500.01. This is just above the approval threshold.",
+        "input_data": {"customer_id": "C001", "total_value": 500.01},
+        "expected_outcome": "Order at $500.01 REQUIRES approval"
+      },
+      {
+        "test_id": "TC-005",
+        "name": "Premium customer gets free shipping",
+        "category": "positive",
+        "req_ids": ["REQ-004", "REQ-014"],
+        "description": "Premium customer (lifetime_spending > $5000) creates an order. Verify shipping_fee = 0.",
+        "input_data": {"customer_id": "PREMIUM_001", "customer_type": "premium"},
+        "expected_outcome": "shipping_fee = 0.00"
+      },
+      {
+        "test_id": "TC-006",
+        "name": "Standard customer pays $9.99 shipping",
+        "category": "positive",
+        "req_ids": ["REQ-005"],
+        "description": "Standard customer creates an order. Verify shipping fee is $9.99.",
+        "input_data": {"customer_id": "C002", "customer_type": "standard"},
+        "expected_outcome": "shipping_fee = 9.99"
+      },
+      {
+        "test_id": "TC-007",
+        "name": "Cancel order that is not shipped",
+        "category": "positive",
+        "req_ids": ["REQ-007"],
+        "description": "Customer cancels an order with status=pending. Should succeed.",
+        "input_data": {"order_id": "ORD-001", "status": "pending"},
+        "expected_outcome": "Order status changed to cancelled"
+      },
+      {
+        "test_id": "TC-008",
+        "name": "Cannot cancel shipped order",
+        "category": "negative",
+        "req_ids": ["REQ-007"],
+        "description": "Customer tries to cancel an order with status=shipped. Should fail.",
+        "input_data": {"order_id": "ORD-002", "status": "shipped"},
+        "expected_outcome": "HTTP 400 - order cannot be cancelled after shipping"
+      },
+      {
+        "test_id": "TC-009",
+        "name": "Cannot order out-of-stock product",
+        "category": "negative",
+        "req_ids": ["REQ-011"],
+        "description": "Customer tries to order a product with stock_quantity=0. Should be rejected.",
+        "input_data": {"product_id": "P_OOS", "stock_quantity": 0},
+        "expected_outcome": "HTTP 422 - product out of stock"
+      },
+      {
+        "test_id": "TC-010",
+        "name": "Boundary: exactly zero stock",
+        "category": "boundary",
+        "req_ids": ["REQ-011"],
+        "description": "Order a product with stock_quantity exactly 0.",
+        "input_data": {"product_id": "P_ZERO", "stock_quantity": 0},
+        "expected_outcome": "HTTP 422 - cannot order product with zero stock"
+      },
+      {
+        "test_id": "TC-011",
+        "name": "Email confirmation sent within 5 minutes",
+        "category": "positive",
+        "req_ids": ["REQ-008"],
+        "description": "After order creation, verify email confirmation is sent within 5 minutes.",
+        "input_data": {"order_id": "ORD-NEW"},
+        "expected_outcome": "Email sent within 300 seconds of order creation"
+      },
+      {
+        "test_id": "TC-012",
+        "name": "Payment timeout marks order as failed",
+        "category": "negative",
+        "req_ids": ["REQ-009"],
+        "description": "Payment processing exceeds 30 seconds. Order must be marked as failed.",
+        "input_data": {"order_id": "ORD-SLOW", "payment_delay_seconds": 31},
+        "expected_outcome": "Order status = failed after 30s timeout"
+      },
+      {
+        "test_id": "TC-013",
+        "name": "Customer becomes premium after $5000 spending",
+        "category": "boundary",
+        "req_ids": ["REQ-014"],
+        "description": "Customer's lifetime spending reaches exactly $5000.01. Verify premium status is granted.",
+        "input_data": {"customer_id": "C003", "lifetime_spending": 5000.01},
+        "expected_outcome": "customer_type upgraded to premium"
+      },
+      {
+        "test_id": "TC-014",
+        "name": "Product must have all required fields",
+        "category": "negative",
+        "req_ids": ["REQ-010"],
+        "description": "Create a product without a price field. Should fail validation.",
+        "input_data": {"name": "Widget", "description": "A widget"},
+        "expected_outcome": "HTTP 422 - price is required"
+      },
+      {
+        "test_id": "TC-015",
+        "name": "Order history retention — records exist after 7 years",
+        "category": "positive",
+        "req_ids": ["REQ-012"],
+        "description": "Verify archived orders from 7+ years ago are still accessible and not deleted.",
+        "input_data": {"order_created_at": "2017-01-01"},
+        "expected_outcome": "Order record still exists and is retrievable"
+      }
+    ]
+  }
+}

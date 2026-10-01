@@ -84,7 +84,7 @@ inject_theme()
 
 st.logo("static/logo.svg")
 
-# Status strip under the navbar
+# NO SIDEBAR USAGE AT ALL.
 def render_status_strip():
     client = get_client()
     try:
@@ -146,10 +146,11 @@ def render_status_strip():
     with col3:
         st.markdown(f"**Backend:** {provider_text}")
 
-    st.markdown("<hr style='margin-top: 0.5rem; margin-bottom: 1.5rem; opacity: 0.2;'>", unsafe_allow_html=True)
-
 render_status_strip()
 
+st.markdown("<hr style='margin-top: 0.5rem; margin-bottom: 1.5rem; opacity: 0.2;'>", unsafe_allow_html=True)
+
+# PURE NATIVE TOP NAVIGATION
 pg = st.navigation(
     [
         st.Page("frontend/views/home.py", title="Home", icon=":material/home:"),
@@ -159,7 +160,7 @@ pg = st.navigation(
         st.Page("frontend/views/traceability.py", title="Traceability", icon=":material/account_tree:"),
         st.Page("frontend/views/evaluation.py", title="Evaluation", icon=":material/assessment:"),
     ],
-    position="top",
+    position="top"
 )
 
 pg.run()

@@ -93,6 +93,7 @@ pg = st.navigation(
         st.Page("frontend/views/specs.py", title="Specs", icon=":material/code:"),
         st.Page("frontend/views/traceability.py", title="Traceability", icon=":material/account_tree:"),
         st.Page("frontend/views/evaluation.py", title="Evaluation", icon=":material/assessment:"),
+        st.Page("frontend/views/admin.py", title="Admin", icon=":material/lock:"),
     ],
     position="hidden"
 )
@@ -122,7 +123,7 @@ st.markdown('''
 # Custom Guaranteed Horizontal Navigation Bar
 nav_container = st.container()
 with nav_container:
-    col_logo, col1, col2, col3, col4, col5, col6, _ = st.columns([2, 2, 2, 2, 2, 2, 2, 1])
+    col_logo, col1, col2, col3, col4, col5, col6, col7 = st.columns([2, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5])
     with col_logo:
         st.markdown("**⚡ Synapse Eng**")
     with col1:
@@ -137,6 +138,8 @@ with nav_container:
         st.page_link("frontend/views/traceability.py", label="Traceability")
     with col6:
         st.page_link("frontend/views/evaluation.py", label="Evaluation")
+    with col7:
+        st.page_link("frontend/views/admin.py", label="Admin")
 
 st.markdown("<hr style='margin-top: 0.2rem; margin-bottom: 1rem; opacity: 0.2;'>", unsafe_allow_html=True)
 

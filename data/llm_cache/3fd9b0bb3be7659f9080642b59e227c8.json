@@ -1,0 +1,20 @@
+{
+  "issues": [
+    {
+      "issue_id": "ISS-L-001",
+      "issue_type": "conflict",
+      "severity": "warning",
+      "involved_req_ids": ["REQ-001", "REQ-005"],
+      "description": "The authorization resolution restricts appointment management exclusively to salon staff/admins ('salon staff/admins can manage appointments... Customers can manage their own profiles and bookings'), which semantically conflicts with REQ-005 granting customers the permission to cancel appointments.",
+      "suggested_question": "Can customers directly cancel their own appointments, or must cancellation requests be processed/managed exclusively by salon staff?"
+    },
+    {
+      "issue_id": "ISS-L-002",
+      "issue_type": "conflict",
+      "severity": "warning",
+      "involved_req_ids": ["REQ-001", "REQ-002"],
+      "description": "The system resolution dictates that the system requires authentication and role-based authorization, but REQ-002 allows viewing available services prior to or independent of customer registration (REQ-001), creating a contradiction over whether browsing services requires an authenticated session.",
+      "suggested_question": "Is viewing available services publicly accessible to unauthenticated visitors, or is authentication required before viewing services?"
+    }
+  ]
+}

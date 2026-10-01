@@ -24,10 +24,10 @@ def _render_eval_report(report: dict):
         rec = [per_type[t].get("recall", 0) for t in types]
         f1 = [per_type[t].get("f1", 0) for t in types]
 
-        fig = go.Figure(data=[
-            go.Bar(name="Precision", x=types, y=prec, marker_color="#3b82f6"),
-            go.Bar(name="Recall", x=types, y=rec, marker_color="#22c55e"),
-            go.Bar(name="F1", x=types, y=f1, marker_color="#f59e0b"),
+        fig = g✅Figure(data=[
+            g✅Bar(name="Precision", x=types, y=prec, marker_color="#3b82f6"),
+            g✅Bar(name="Recall", x=types, y=rec, marker_color="#22c55e"),
+            g✅Bar(name="F1", x=types, y=f1, marker_color="#f59e0b"),
         ])
         fig.update_layout(
             barmode="group",

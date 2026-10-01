@@ -1,0 +1,193 @@
+{
+  "test_cases": [
+    {
+      "test_id": "TC-001",
+      "name": "Customer Successful Registration",
+      "category": "positive",
+      "req_ids": ["REQ-001"],
+      "description": "Verify that a new customer can successfully register an account with valid information and receive customer-level permissions.",
+      "input_data": {
+        "full_name": "Jane Doe",
+        "email": "jane.doe@example.com",
+        "password": "SecurePassword123!",
+        "role": "Customer"
+      },
+      "expected_outcome": "The customer account is created successfully, confirmation is displayed/sent, and customer can log in with customer-level access."
+    },
+    {
+      "test_id": "TC-002",
+      "name": "Registration with Duplicate Email",
+      "category": "negative",
+      "req_ids": ["REQ-001"],
+      "description": "Verify that registration fails when an email already in the system is used.",
+      "input_data": {
+        "full_name": "Jane Clone",
+        "email": "jane.doe@example.com",
+        "password": "AnotherPassword123!"
+      },
+      "expected_outcome": "Registration is rejected with a validation error indicating the email is already registered."
+    },
+    {
+      "test_id": "TC-003",
+      "name": "Customer Privilege Escalation Attempt during Registration",
+      "category": "negative",
+      "req_ids": ["REQ-001"],
+      "description": "Verify that a customer cannot assign themselves administrative privileges during registration.",
+      "input_data": {
+        "full_name": "Malicious User",
+        "email": "attacker@example.com",
+        "password": "Password123!",
+        "role": "Admin"
+      },
+      "expected_outcome": "System assigns the default 'Customer' role or rejects the request; the user does not gain admin privileges."
+    },
+    {
+      "test_id": "TC-004",
+      "name": "View Available Services as Customer",
+      "category": "positive",
+      "req_ids": ["REQ-002"],
+      "description": "Verify that an authenticated customer can view the full list of active salon services with details and pricing.",
+      "input_data": {
+        "user_role": "Customer",
+        "authenticated": true
+      },
+      "expected_outcome": "List of active services (e.g., Haircut, Color, Manicure) is displayed with descriptions, durations, and prices."
+    },
+    {
+      "test_id": "TC-005",
+      "name": "Customer Access to Admin Service Configuration",
+      "category": "negative",
+      "req_ids": ["REQ-002"],
+      "description": "Verify that customer users cannot edit, add, or delete salon services, strictly restricted to viewing.",
+      "input_data": {
+        "user_role": "Customer",
+        "action": "POST /api/services",
+        "payload": {
+          "name": "New Service",
+          "price": 50.00
+        }
+      },
+      "expected_outcome": "System returns HTTP 403 Forbidden, preventing unauthorized service creation."
+    },
+    {
+      "test_id": "TC-006",
+      "name": "Select Available Future Appointment Slot",
+      "category": "positive",
+      "req_ids": ["REQ-003"],
+      "description": "Verify that a customer can select an open appointment slot for an active service.",
+      "input_data": {
+        "service_id": "SRV-001",
+        "appointment_time": "2025-06-15T10:00:00Z"
+      },
+      "expected_outcome": "The slot is selected and held for the customer to proceed to booking/payment."
+    },
+    {
+      "test_id": "TC-007",
+      "name": "Select Already Booked Appointment Slot",
+      "category": "negative",
+      "req_ids": ["REQ-003"],
+      "description": "Verify that a customer cannot select an appointment slot that is already booked by another user.",
+      "input_data": {
+        "service_id": "SRV-001",
+        "appointment_time": "2025-06-15T10:00:00Z"
+      },
+      "expected_outcome": "System shows an error that the selected time slot is unavailable."
+    },
+    {
+      "test_id": "TC-008",
+      "name": "Appointment Time at Earliest Valid Booking Boundary",
+      "category": "boundary",
+      "req_ids": ["REQ-003"],
+      "description": "Verify booking behavior exactly at opening time boundary versus before opening time.",
+      "input_data": {
+        "opening_boundary_time": "2025-06-16T09:00:00Z",
+        "prior_to_opening_time": "2025-06-16T08:59:00Z"
+      },
+      "expected_outcome": "The 09:00:00Z slot is available for booking, whereas the 08:59:00Z slot is unavailable."
+    },
+    {
+      "test_id": "TC-009",
+      "name": "Successful Online Payment for Appointment",
+      "category": "positive",
+      "req_ids": ["REQ-004"],
+      "description": "Verify that a customer can successfully pay online for a booked appointment using a valid payment method.",
+      "input_data": {
+        "appointment_id": "APT-1001",
+        "payment_method": "CreditCard",
+        "amount": 75.00,
+        "card_number": "4111111111111111",
+        "cvv": "123",
+        "expiry": "12/28"
+      },
+      "expected_outcome": "Payment is processed successfully, payment status is updated to 'Paid', and receipt is generated."
+    },
+    {
+      "test_id": "TC-010",
+      "name": "Online Payment with Declined Card",
+      "category": "negative",
+      "req_ids": ["REQ-004"],
+      "description": "Verify proper error handling when the online payment transaction is declined by the gateway.",
+      "input_data": {
+        "appointment_id": "APT-1002",
+        "amount": 50.00,
+        "card_number": "4000000000000002",
+        "cvv": "123",
+        "expiry": "12/28"
+      },
+      "expected_outcome": "Payment fails with an appropriate error message; appointment status remains unpaid/pending."
+    },
+    {
+      "test_id": "TC-011",
+      "name": "Payment Boundary Value - Minimum Valid and Invalid Amounts",
+      "category": "boundary",
+      "req_ids": ["REQ-004"],
+      "description": "Verify payment boundaries around zero amount and minimum valid transaction amount.",
+      "input_data": {
+        "zero_amount": 0.00,
+        "negative_amount": -0.01,
+        "min_positive_amount": 0.01
+      },
+      "expected_outcome": "0.00 and -0.01 amounts are rejected as invalid payment values; valid positive amounts matching service price are accepted."
+    },
+    {
+      "test_id": "TC-012",
+      "name": "Customer Successfully Cancels Own Appointment",
+      "category": "positive",
+      "req_ids": ["REQ-005"],
+      "description": "Verify that a customer can cancel their own upcoming appointment.",
+      "input_data": {
+        "customer_id": "CUST-001",
+        "appointment_id": "APT-1003",
+        "appointment_owner_id": "CUST-001",
+        "status": "Upcoming"
+      },
+      "expected_outcome": "Appointment status changes to 'Cancelled' and slot becomes available again."
+    },
+    {
+      "test_id": "TC-013",
+      "name": "Customer Attempts to Cancel Another Customer's Appointment",
+      "category": "negative",
+      "req_ids": ["REQ-005"],
+      "description": "Verify authorization checks prevent a customer from cancelling an appointment owned by another customer.",
+      "input_data": {
+        "authenticated_customer_id": "CUST-001",
+        "target_appointment_id": "APT-2005",
+        "target_appointment_owner_id": "CUST-002"
+      },
+      "expected_outcome": "Request is rejected with HTTP 403 Forbidden or not found, appointment remains active."
+    },
+    {
+      "test_id": "TC-014",
+      "name": "Cancel Appointment Already In Past or Cancelled",
+      "category": "boundary",
+      "req_ids": ["REQ-005"],
+      "description": "Verify boundary handling when attempting to cancel an appointment whose start time has just passed.",
+      "input_data": {
+        "appointment_id": "APT-1004",
+        "current_time": "2025-06-15T10:00:01Z",
+        "appointment_start_time": "2025-06-15T10:00:00Z"
+      },
+      "expected_outcome": "System prevents cancellation of an appointment that has already started or elapsed."
+    }
+  ]
+}

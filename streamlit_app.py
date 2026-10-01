@@ -84,7 +84,41 @@ inject_theme()
 
 st.logo("static/logo.svg")
 
-# NO SIDEBAR USAGE AT ALL.
+# Register pages with hidden navigation
+pg = st.navigation(
+    [
+        st.Page("frontend/views/home.py", title="Home", icon=":material/home:"),
+        st.Page("frontend/views/requirements.py", title="Requirements", icon=":material/list:"),
+        st.Page("frontend/views/issues.py", title="Issues", icon=":material/report:"),
+        st.Page("frontend/views/specs.py", title="Specs", icon=":material/code:"),
+        st.Page("frontend/views/traceability.py", title="Traceability", icon=":material/account_tree:"),
+        st.Page("frontend/views/evaluation.py", title="Evaluation", icon=":material/assessment:"),
+    ],
+    position="hidden"
+)
+
+# Custom Guaranteed Horizontal Navigation Bar
+nav_container = st.container()
+with nav_container:
+    col_logo, col1, col2, col3, col4, col5, col6, _ = st.columns([2, 2, 2, 2, 2, 2, 2, 1])
+    with col_logo:
+        st.markdown("**⚡ Synapse Eng**")
+    with col1:
+        st.page_link("frontend/views/home.py", label="Home", icon="🏠")
+    with col2:
+        st.page_link("frontend/views/requirements.py", label="Requirements", icon="📋")
+    with col3:
+        st.page_link("frontend/views/issues.py", label="Issues", icon="⚠️")
+    with col4:
+        st.page_link("frontend/views/specs.py", label="Specs", icon="💻")
+    with col5:
+        st.page_link("frontend/views/traceability.py", label="Traceability", icon="🔗")
+    with col6:
+        st.page_link("frontend/views/evaluation.py", label="Evaluation", icon="📊")
+
+st.markdown("<hr style='margin-top: 0.2rem; margin-bottom: 1rem; opacity: 0.2;'>", unsafe_allow_html=True)
+
+# Status Strip
 def render_status_strip():
     client = get_client()
     try:
@@ -102,9 +136,9 @@ def render_status_strip():
         status_text = "🔴 Backend offline"
         provider_text = "Unknown"
 
-    col1, col2, col3, _ = st.columns([2, 2, 2, 6])
+    col_proj, col_stat, col_back, _ = st.columns([2, 2, 3, 5])
     
-    with col1:
+    with col_proj:
         with st.popover("📁 Project"):
             st.markdown("### Projects")
             project_id = ss("project_id")
@@ -140,29 +174,16 @@ def render_status_strip():
                 except Exception as e:
                     st.error(f"Error: {e}")
                     
-    with col2:
+    with col_stat:
         st.markdown(f"**Status:** {status_text}")
         
-    with col3:
+    with col_back:
         st.markdown(f"**Backend:** {provider_text}")
 
 render_status_strip()
+st.markdown("<br>", unsafe_allow_html=True)
 
-st.markdown("<hr style='margin-top: 0.5rem; margin-bottom: 1.5rem; opacity: 0.2;'>", unsafe_allow_html=True)
-
-# PURE NATIVE TOP NAVIGATION
-pg = st.navigation(
-    [
-        st.Page("frontend/views/home.py", title="Home", icon=":material/home:"),
-        st.Page("frontend/views/requirements.py", title="Requirements", icon=":material/list:"),
-        st.Page("frontend/views/issues.py", title="Issues", icon=":material/report:"),
-        st.Page("frontend/views/specs.py", title="Specs", icon=":material/code:"),
-        st.Page("frontend/views/traceability.py", title="Traceability", icon=":material/account_tree:"),
-        st.Page("frontend/views/evaluation.py", title="Evaluation", icon=":material/assessment:"),
-    ],
-    position="top"
-)
-
+# Run the selected page content
 pg.run()
 
 st.markdown('''

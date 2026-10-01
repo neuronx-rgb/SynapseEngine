@@ -1,0 +1,36 @@
+{
+  "issues": [
+    {
+      "issue_id": "ISS-A-001",
+      "issue_type": "ambiguity",
+      "severity": "warning",
+      "involved_req_ids": ["REQ-002"],
+      "description": "Contextual ambiguity regarding whether viewing available services requires authentication. The resolution states the system requires authentication, but service catalogs are traditionally publicly viewable by unauthenticated visitors.",
+      "suggested_question": "Can unauthenticated visitors view available services, or must a user first register and log in to view services?"
+    },
+    {
+      "issue_id": "ISS-A-002",
+      "issue_type": "ambiguity",
+      "severity": "warning",
+      "involved_req_ids": ["REQ-001", "REQ-002", "REQ-003"],
+      "description": "Slash conjunction ambiguity in 'salon staff/admins'. It is unclear whether 'staff' and 'admin' are distinct roles with differing access levels for appointments and services, or treated as an interchangeable single role.",
+      "suggested_question": "Are 'salon staff' and 'admins' separate roles with distinct permissions for managing appointments, services, and customer records?"
+    },
+    {
+      "issue_id": "ISS-A-003",
+      "issue_type": "ambiguity",
+      "severity": "warning",
+      "involved_req_ids": ["REQ-004"],
+      "description": "Modal ambiguity in 'can pay online'. It is unclear whether online payment is optional (with in-person payment also permitted) or mandatory to finalize the appointment booking.",
+      "suggested_question": "Is online payment mandatory at the time of booking, or is in-person payment at the salon supported as an alternative?"
+    },
+    {
+      "issue_id": "ISS-A-004",
+      "issue_type": "ambiguity",
+      "severity": "warning",
+      "involved_req_ids": ["REQ-004", "REQ-005"],
+      "description": "Semantic ambiguity regarding cancellation scope and financial state. 'Customers can cancel appointments' does not specify time constraints or the resulting financial state for appointments already paid online.",
+      "suggested_question": "Does cancelling an appointment trigger an automated refund for online payments, and is there a cut-off window after which cancellations are disallowed?"
+    }
+  ]
+}

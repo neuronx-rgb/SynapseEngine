@@ -11,6 +11,13 @@ import threading
 import logging
 import streamlit as st
 
+st.set_page_config(
+    page_title="Synapse Engine",
+    page_icon="⚡",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 try:
@@ -73,12 +80,6 @@ from frontend.theme import inject_theme
 from frontend.api_client import get_client
 from frontend.utils import ss, set_ss
 
-st.set_page_config(
-    page_title="Synapse Engine",
-    page_icon="⚡",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
 
 inject_theme()
 

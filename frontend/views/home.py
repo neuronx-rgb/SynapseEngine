@@ -18,6 +18,23 @@ def render():
                 font-size: 1.1em; 
                 line-height: 1.5;
             }
+            .see-how-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 38px; /* Matches st.button height roughly */
+                border: 1px solid rgba(255,255,255,0.2);
+                border-radius: 8px;
+                color: white !important;
+                text-decoration: none !important;
+                font-weight: 400;
+                transition: border-color 0.2s, color 0.2s;
+            }
+            .see-how-btn:hover {
+                border-color: #22E06B;
+                color: #22E06B !important;
+            }
         </style>
     """, unsafe_allow_html=True)
 
@@ -31,6 +48,8 @@ def render():
             unsafe_allow_html=True
         )
         
+        st.markdown("<p style='font-size: 0.9em; opacity: 0.7; margin-bottom: 10px;'>Enter your input business website requirements here to begin:</p>", unsafe_allow_html=True)
+        
         c_btn1, c_btn2 = st.columns([1, 1])
         with c_btn1:
             if st.button("Start compiling", type="primary", use_container_width=True):
@@ -41,16 +60,13 @@ def render():
                 set_ss("pipeline_stage", "input")
                 st.switch_page("frontend/views/requirements.py")
         with c_btn2:
-            if st.button("See how it works", use_container_width=True):
-                pass
-            
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("✔️ **Z3-proven conflicts**\n\n✔️ **Zero silent assumptions**\n\n✔️ **Traceable end to end**")
+            st.markdown('<a href="#how-it-works" target="_self" class="see-how-btn">See how it works</a>', unsafe_allow_html=True)
 
     with col2:
         render_hero()
 
     st.markdown("<br><br><br>", unsafe_allow_html=True)
+    st.markdown("<div id='how-it-works'></div>", unsafe_allow_html=True)
     st.markdown("### How it works")
     
     st.markdown("""
@@ -73,6 +89,5 @@ def render():
         st.markdown("<div style='border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 14px;'><h4>Completeness</h4><p style='opacity:0.7; font-size:0.9em;'>Flags missing edge cases and unhandled error states.</p><p style='color:#22E06B; font-size:0.8em; margin-bottom:0;'>OUTPUT: Completeness warnings</p></div>", unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
-    
 
 render()

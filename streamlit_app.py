@@ -104,17 +104,17 @@ with nav_container:
     with col_logo:
         st.markdown("**⚡ Synapse Eng**")
     with col1:
-        st.page_link("frontend/views/home.py", label="Home", icon="🏠")
+        st.page_link("frontend/views/home.py", label="Home")
     with col2:
-        st.page_link("frontend/views/requirements.py", label="Requirements", icon="📋")
+        st.page_link("frontend/views/requirements.py", label="Requirements")
     with col3:
-        st.page_link("frontend/views/issues.py", label="Issues", icon="⚠️")
+        st.page_link("frontend/views/issues.py", label="Issues")
     with col4:
-        st.page_link("frontend/views/specs.py", label="Specs", icon="💻")
+        st.page_link("frontend/views/specs.py", label="Specs")
     with col5:
-        st.page_link("frontend/views/traceability.py", label="Traceability", icon="🔗")
+        st.page_link("frontend/views/traceability.py", label="Traceability")
     with col6:
-        st.page_link("frontend/views/evaluation.py", label="Evaluation", icon="📊")
+        st.page_link("frontend/views/evaluation.py", label="Evaluation")
 
 st.markdown("<hr style='margin-top: 0.2rem; margin-bottom: 1rem; opacity: 0.2;'>", unsafe_allow_html=True)
 

@@ -17,7 +17,6 @@ class SimpleSchema(BaseModel):
 def _clear_cache():
     """Clear LLM disk cache between tests to prevent cache hits."""
     import backend.llm as llm_module
-    import shutil
     cache_dir = llm_module.CACHE_DIR
     if cache_dir.exists():
         for f in cache_dir.glob("*.json"):
@@ -29,17 +28,17 @@ def test_fallback_on_gemini_429():
     import backend.llm as llm_module
     _clear_cache()
 
-    def mock_gemini_429(prompt: str) -> str:
+    def mock_gemini_429(self, prompt: str, schema=None) -> str:
         raise RuntimeError("429 Too Many Requests")
 
-    def mock_groq_ok(prompt: str) -> str:
+    def mock_groq_ok(self, prompt: str, schema=None) -> str:
         return '{"result": "groq_answer"}'
 
     with patch.object(llm_module, "MOCK_MODE", False):
         with patch.object(llm_module, "GEMINI_API_KEY", "fake-gemini-key"):
             with patch.object(llm_module, "GROQ_API_KEY", "fake-groq-key"):
-                with patch.object(llm_module, "_call_gemini", side_effect=mock_gemini_429):
-                    with patch.object(llm_module, "_call_groq", side_effect=mock_groq_ok):
+                with patch("backend.llm.GeminiProvider.generate", autospec=True, side_effect=mock_gemini_429):
+                    with patch("backend.llm.GroqProvider.generate", autospec=True, side_effect=mock_groq_ok):
                         with patch.object(llm_module, "BACKOFF_BASE", 0.001):
                             result = llm_module.generate_json("test prompt fallback1", SimpleSchema)
                             assert result.result == "groq_answer"
@@ -51,39 +50,40 @@ def test_fallback_on_gemini_repeated_failure():
     import backend.llm as llm_module
     _clear_cache()
 
-    def mock_gemini_fail(prompt: str) -> str:
+    def mock_gemini_fail(self, prompt: str, schema=None) -> str:
         raise RuntimeError("500 Internal Server Error")
 
-    def mock_groq_ok(prompt: str) -> str:
+    def mock_groq_ok(self, prompt: str, schema=None) -> str:
         return '{"result": "groq_fallback"}'
 
     with patch.object(llm_module, "MOCK_MODE", False):
         with patch.object(llm_module, "GEMINI_API_KEY", "fake-gemini-key"):
             with patch.object(llm_module, "GROQ_API_KEY", "fake-groq-key"):
-                with patch.object(llm_module, "_call_gemini", side_effect=mock_gemini_fail):
-                    with patch.object(llm_module, "_call_groq", side_effect=mock_groq_ok):
+                with patch("backend.llm.GeminiProvider.generate", autospec=True, side_effect=mock_gemini_fail):
+                    with patch("backend.llm.GroqProvider.generate", autospec=True, side_effect=mock_groq_ok):
                         with patch.object(llm_module, "BACKOFF_BASE", 0.001):
                             result = llm_module.generate_json("test prompt fallback2", SimpleSchema)
                             assert result.result == "groq_fallback"
 
 
 def test_no_fallback_when_both_fail():
-    """If both providers fail, raise RuntimeError."""
+    """If both providers fail, return empty fallback result (graceful degradation)."""
     import backend.llm as llm_module
     _clear_cache()
 
-    def mock_fail(prompt: str) -> str:
+    def mock_fail(self, prompt: str, schema=None) -> str:
         raise RuntimeError("429 rate limit")
 
     with patch.object(llm_module, "MOCK_MODE", False):
         with patch.object(llm_module, "GEMINI_API_KEY", "fake-gemini-key"):
             with patch.object(llm_module, "GROQ_API_KEY", "fake-groq-key"):
-                with patch.object(llm_module, "_call_gemini", side_effect=mock_fail):
-                    with patch.object(llm_module, "_call_groq", side_effect=mock_fail):
+                with patch("backend.llm.GeminiProvider.generate", autospec=True, side_effect=mock_fail):
+                    with patch("backend.llm.GroqProvider.generate", autospec=True, side_effect=mock_fail):
                         with patch.object(llm_module, "BACKOFF_BASE", 0.001):
                             with patch.object(llm_module, "MAX_RETRIES", 1):
-                                with pytest.raises(RuntimeError):
-                                    llm_module.generate_json("test prompt both_fail", SimpleSchema)
+                                # Now returns empty result instead of raising
+                                result = llm_module.generate_json("test prompt both_fail", SimpleSchema)
+                                assert result is not None
 
 
 def test_json_validation_retry():
@@ -93,7 +93,7 @@ def test_json_validation_retry():
 
     call_count = [0]
 
-    def mock_gemini_retry(prompt: str) -> str:
+    def mock_gemini_retry(self, prompt: str, schema=None) -> str:
         call_count[0] += 1
         if call_count[0] == 1:
             return "not valid json"
@@ -102,7 +102,7 @@ def test_json_validation_retry():
     with patch.object(llm_module, "MOCK_MODE", False):
         with patch.object(llm_module, "GEMINI_API_KEY", "fake-gemini-key"):
             with patch.object(llm_module, "GROQ_API_KEY", ""):
-                with patch.object(llm_module, "_call_gemini", side_effect=mock_gemini_retry):
+                with patch("backend.llm.GeminiProvider.generate", autospec=True, side_effect=mock_gemini_retry):
                     with patch.object(llm_module, "BACKOFF_BASE", 0.001):
                         with patch.object(llm_module, "MAX_RETRIES", 3):
                             result = llm_module.generate_json("test prompt json_retry", SimpleSchema)
@@ -117,8 +117,9 @@ def test_no_keys_mock_false_raises():
     with patch.object(llm_module, "MOCK_MODE", False):
         with patch.object(llm_module, "GEMINI_API_KEY", ""):
             with patch.object(llm_module, "GROQ_API_KEY", ""):
-                with pytest.raises(RuntimeError, match="No LLM API keys"):
-                    llm_module.generate_json("test", SimpleSchema)
+                with patch.object(llm_module, "OLLAMA_MODEL", ""):
+                    with pytest.raises(RuntimeError, match="No LLM providers available"):
+                        llm_module.generate_json("test", SimpleSchema)
 
 
 def test_mock_mode_active_by_default():

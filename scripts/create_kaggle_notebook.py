@@ -1,0 +1,221 @@
+import json
+
+notebook = {
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Synapse Engine: Qwen 3B Fine-Tuning & GGUF Export\n",
+    "This notebook will:\n",
+    "1. Train the model using QLoRA on your dataset.\n",
+    "2. Merge the LoRA weights.\n",
+    "3. Convert the model to Ollama-compatible `.gguf` format.\n",
+    "4. Upload the result directly to your Hugging Face account."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!pip install -q -U torch transformers peft trl datasets bitsandbytes accelerate huggingface_hub"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import os\n",
+    "from kaggle_secrets import UserSecretsClient\n",
+    "from huggingface_hub import login\n",
+    "\n",
+    "try:\n",
+    "    user_secrets = UserSecretsClient()\n",
+    "    hf_token = user_secrets.get_secret(\"HF_TOKEN\")\n",
+    "    login(token=hf_token)\n",
+    "except Exception as e:\n",
+    "    print(\"⚠️ Please add HF_TOKEN to your Kaggle Secrets to upload the final model!\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import torch\n",
+    "from datasets import load_dataset\n",
+    "from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments, BitsAndBytesConfig\n",
+    "from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training\n",
+    "from trl import SFTTrainer\n",
+    "\n",
+    "# You can adjust this to any Qwen 3B-4B class model\n",
+    "model_id = \"Qwen/Qwen2.5-3B-Instruct\"\n",
+    "output_dir = \"/kaggle/working/synapse-qwen-finetuned\"\n",
+    "\n",
+    "tokenizer = AutoTokenizer.from_pretrained(model_id)\n",
+    "tokenizer.pad_token = tokenizer.eos_token\n",
+    "\n",
+    "bnb_config = BitsAndBytesConfig(\n",
+    "    load_in_4bit=True,\n",
+    "    bnb_4bit_use_double_quant=True,\n",
+    "    bnb_4bit_quant_type=\"nf4\",\n",
+    "    bnb_4bit_compute_dtype=torch.bfloat16\n",
+    ")\n",
+    "\n",
+    "model = AutoModelForCausalLM.from_pretrained(\n",
+    "    model_id, quantization_config=bnb_config, device_map=\"auto\"\n",
+    ")\n",
+    "model.config.use_cache = False\n",
+    "model = prepare_model_for_kbit_training(model)\n",
+    "\n",
+    "peft_config = LoraConfig(\n",
+    "    r=16, lora_alpha=32, \n",
+    "    target_modules=[\"q_proj\", \"k_proj\", \"v_proj\", \"o_proj\", \"gate_proj\", \"up_proj\", \"down_proj\"],\n",
+    "    lora_dropout=0.05, bias=\"none\", task_type=\"CAUSAL_LM\"\n",
+    ")\n",
+    "model = get_peft_model(model, peft_config)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Update these paths if you named your Kaggle Dataset differently\n",
+    "dataset = load_dataset(\"json\", data_files={\n",
+    "    \"train\": \"/kaggle/input/synapse-dataset/train.jsonl\",\n",
+    "    \"test\": \"/kaggle/input/synapse-dataset/val.jsonl\"\n",
+    "})\n",
+    "\n",
+    "def format_chat(example):\n",
+    "    example[\"text\"] = tokenizer.apply_chat_template(example[\"messages\"], tokenize=False)\n",
+    "    return example\n",
+    "\n",
+    "dataset = dataset.map(format_chat)\n",
+    "\n",
+    "training_args = TrainingArguments(\n",
+    "    output_dir=output_dir,\n",
+    "    per_device_train_batch_size=4,\n",
+    "    gradient_accumulation_steps=4,\n",
+    "    optim=\"paged_adamw_32bit\",\n",
+    "    save_steps=100,\n",
+    "    logging_steps=10,\n",
+    "    learning_rate=2e-4,\n",
+    "    fp16=True,\n",
+    "    max_grad_norm=0.3,\n",
+    "    max_steps=300,\n",
+    "    warmup_ratio=0.03,\n",
+    "    group_by_length=True,\n",
+    "    lr_scheduler_type=\"cosine\",\n",
+    "    report_to=\"none\"\n",
+    ")\n",
+    "\n",
+    "trainer = SFTTrainer(\n",
+    "    model=model,\n",
+    "    train_dataset=dataset[\"train\"],\n",
+    "    eval_dataset=dataset[\"test\"],\n",
+    "    peft_config=peft_config,\n",
+    "    dataset_text_field=\"text\",\n",
+    "    max_seq_length=512,\n",
+    "    tokenizer=tokenizer,\n",
+    "    args=training_args,\n",
+    ")\n",
+    "\n",
+    "print(\"Starting Training...\")\n",
+    "trainer.train()\n",
+    "trainer.model.save_pretrained(f\"{output_dir}/adapter\")\n",
+    "tokenizer.save_pretrained(f\"{output_dir}/adapter\")\n",
+    "print(\"Training Complete!\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(\"Merging model and preparing for GGUF conversion...\")\n",
+    "import gc\n",
+    "del model\n",
+    "del trainer\n",
+    "gc.collect()\n",
+    "torch.cuda.empty_cache()\n",
+    "\n",
+    "from peft import AutoPeftModelForCausalLM\n",
+    "merged_model = AutoPeftModelForCausalLM.from_pretrained(\n",
+    "    f\"{output_dir}/adapter\", torch_dtype=torch.float16, device_map=\"cpu\"\n",
+    ")\n",
+    "merged_model = merged_model.merge_and_unload()\n",
+    "merged_model.save_pretrained(f\"{output_dir}/merged\")\n",
+    "tokenizer.save_pretrained(f\"{output_dir}/merged\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!git clone https://github.com/ggerganov/llama.cpp\n",
+    "!pip install -r llama.cpp/requirements.txt\n",
+    "!python llama.cpp/convert_hf_to_gguf.py {output_dir}/merged --outfile /kaggle/working/synapse-qwen-4b.gguf --outtype q8_0"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from huggingface_hub import HfApi\n",
+    "api = HfApi()\n",
+    "\n",
+    "# REPLACE 'your-username' WITH YOUR HUGGINGFACE USERNAME\n",
+    "hf_username = \"your-username\" \n",
+    "repo_id = f\"{hf_username}/synapse-qwen-4b-gguf\"\n",
+    "\n",
+    "try:\n",
+    "    api.create_repo(repo_id=repo_id, exist_ok=True)\n",
+    "    print(\"Uploading GGUF to HuggingFace...\")\n",
+    "    api.upload_file(\n",
+    "        path_or_fileobj=\"/kaggle/working/synapse-qwen-4b.gguf\",\n",
+    "        path_in_repo=\"synapse-qwen-4b.gguf\",\n",
+    "        repo_id=repo_id\n",
+    "    )\n",
+    "    print(f\"Success! You can now download the model from https://huggingface.co/{repo_id}\")\n",
+    "except Exception as e:\n",
+    "    print(f\"Upload failed (did you set HF_TOKEN and your username?): {e}\")"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
+
+with open("D:/Storm/Synapse_Finetune_Kaggle.ipynb", "w") as f:
+    json.dump(notebook, f, indent=1)

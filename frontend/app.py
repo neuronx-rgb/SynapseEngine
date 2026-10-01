@@ -122,6 +122,35 @@ SAMPLE_TEXTS = {
     "(c) Salon Booking (Vague)": _safe_read("samples/salon_booking.txt"),
 }
 
+
+def _load_dataset_projects() -> dict[str, list[dict]]:
+    """Load dataset_real.json and return {project_name: [req_dicts]}."""
+    import json
+    from pathlib import Path
+    path = Path("eval/dataset_real.json")
+    if not path.exists():
+        return {}
+    try:
+        with open(path, encoding="utf-8") as f:
+            docs = json.load(f)
+        result = {}
+        for doc in docs:
+            project = doc.get("project", "Unknown")
+            result[project] = doc.get("requirements", [])
+        return result
+    except Exception:
+        return {}
+
+
+def _dataset_reqs_to_text(reqs: list[dict], n: int) -> str:
+    """Convert sampled dataset requirements to plain-text input format."""
+    lines = []
+    for i, r in enumerate(reqs[:n], start=1):
+        req_id = r.get("req_id", f"REQ-{i:03d}")
+        text = r.get("text", "")
+        lines.append(f"{req_id}: {text}")
+    return "\n".join(lines)
+
 # ---------------------------------------------------------------------------
 # Sidebar — status
 # ---------------------------------------------------------------------------
@@ -253,6 +282,9 @@ def tab_requirements():
                     issues = analyze_result.get("issues", [])
                     set_ss("issues", issues)
                     blocking = analyze_result.get("blocking_count", 0)
+                    llm_warn = analyze_result.get("llm_warning")
+                    if llm_warn:
+                        st.warning(f"⚠️ {llm_warn}")
                     if blocking > 0:
                         st.warning(f"⚠️ Found {len(issues)} issue(s), {blocking} blocking — resolve in Issues tab.")
                         set_ss("pipeline_stage", "clarify")
@@ -302,7 +334,10 @@ def tab_issues():
         issues = ss("issues", [])
 
     if not issues:
-        st.info("No issues found yet. Parse and analyze requirements first.")
+        if ss("pipeline_stage") in ("clarify", "generate"):
+            st.success("✅ No issues detected. Your requirements passed the current analysis checks.")
+        else:
+            st.info("No analysis results yet. Parse and analyze requirements first.")
         return
 
     # Summary counts
@@ -372,7 +407,7 @@ def tab_issues():
                         if st.button("Submit", key=f"submit_{iss['issue_id']}"):
                             if ans.strip():
                                 try:
-                                    client.answer_issue(iss["issue_id"], ans)
+                                    client.answer_issue(project_id, iss["issue_id"], ans)
                                     st.success("Answered!")
                                     st.rerun()
                                 except Exception as e:
@@ -382,7 +417,7 @@ def tab_issues():
                     with b2:
                         if st.button("Assume default", key=f"assume_{iss['issue_id']}"):
                             try:
-                                client.assume_issue(iss["issue_id"])
+                                client.assume_issue(project_id, iss["issue_id"])
                                 st.info("Default assumed.")
                                 st.rerun()
                             except Exception as e:

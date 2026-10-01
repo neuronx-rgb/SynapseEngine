@@ -194,9 +194,9 @@ generate_json(prompt, schema)
 |----------|---------|-------------|
 | `MOCK_MODE` | `true` | Use fixture data (no API calls) |
 | `GEMINI_API_KEY` | — | Google AI Studio key |
-| `GEMINI_MODEL` | `gemini-2.5-flash` | Gemini model |
+| `GEMINI_MODEL` | `gemini-3.8-flash` | Gemini model |
 | `GROQ_API_KEY` | — | Groq API key |
-| `GROQ_MODEL` | `llama-3.3-70b-versatile` | Groq model |
+| `GROQ_MODEL` | `openai/gpt-oss-20b` | Groq model |
 | `BACKEND_MODE` | `embedded` | `embedded` or `remote` |
 | `BACKEND_URL` | `http://127.0.0.1:8000` | Backend URL (remote mode) |
 | `DATA_DIR` | `./data` | SQLite + cache directory |

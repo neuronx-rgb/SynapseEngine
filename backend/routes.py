@@ -146,6 +146,38 @@ def submit_requirements(
 # Analysis
 # ---------------------------------------------------------------------------
 
+def _build_effective_parse_result(reqs_db: List[Requirement], resolved_issues: List[Issue]) -> ParseResult:
+    from backend.models import ParsedRequirement, ParseResult, ConstraintSchema
+    
+    clarifications_by_req = {}
+    for ri in resolved_issues:
+        clarification_text = ri.answer if ri.status == IssueStatus.answered else ri.assumption
+        if not clarification_text: continue
+        for req_id in ri.get_involved_req_ids():
+            clarifications_by_req.setdefault(req_id, []).append(
+                f"[Clarification for {ri.issue_type}]: {clarification_text}"
+            )
+            
+    parsed_reqs = []
+    for r in reqs_db:
+        constraints_raw = json.loads(r.constraints)
+        constraints = [ConstraintSchema(**c) for c in constraints_raw]
+        
+        effective_text = r.text
+        if r.req_id in clarifications_by_req:
+            effective_text += "\n\nResolutions:\n" + "\n".join(f"- {c}" for c in clarifications_by_req[r.req_id])
+            
+        parsed_reqs.append(ParsedRequirement(
+            req_id=r.req_id,
+            text=effective_text,
+            source_sentence=r.source_sentence,
+            entities=json.loads(r.entities),
+            actions=json.loads(r.actions),
+            constraints=constraints,
+        ))
+    return ParseResult(requirements=parsed_reqs)
+
+
 @router.post("/projects/{project_id}/analyze")
 def analyze_requirements(project_id: int, session: Session = Depends(get_session)):
     project = session.get(Project, project_id)
@@ -156,41 +188,56 @@ def analyze_requirements(project_id: int, session: Session = Depends(get_session
     if not reqs_db:
         raise HTTPException(400, "No requirements found. Submit requirements first.")
 
-    # Delete old issues
-    old_issues = session.exec(select(Issue).where(Issue.project_id == project_id)).all()
-    for i in old_issues:
+    # Only delete OPEN issues. Keep answered/assumed.
+    old_open_issues = session.exec(
+        select(Issue).where(Issue.project_id == project_id, Issue.status == IssueStatus.open)
+    ).all()
+    for i in old_open_issues:
         session.delete(i)
     session.commit()
 
-    # Build ParseResult from DB
-    parsed_reqs = []
-    for r in reqs_db:
-        constraints_raw = json.loads(r.constraints)
-        constraints = [ConstraintSchema(**c) for c in constraints_raw]
-        parsed_reqs.append(ParsedRequirement(
-            req_id=r.req_id,
-            text=r.text,
-            source_sentence=r.source_sentence,
-            entities=json.loads(r.entities),
-            actions=json.loads(r.actions),
-            constraints=constraints,
-        ))
-    parse_result = ParseResult(requirements=parsed_reqs)
+    resolved_issues = session.exec(
+        select(Issue).where(Issue.project_id == project_id, Issue.status.in_([IssueStatus.answered, IssueStatus.assumed]))
+    ).all()
 
-    # Run analysis
-    issues_out = analyzer.analyze(parse_result)
+    # Build ParseResult with effective text
+    parse_result = _build_effective_parse_result(reqs_db, resolved_issues)
 
-    # Save issues
-    for i, iss in enumerate(issues_out):
+    # Run analysis on effective text
+    llm_analysis_failed = False
+    try:
+        issues_out = analyzer.analyze(parse_result)
+    except Exception as analysis_err:
+        logger.error(f"analyzer.analyze() raised: {analysis_err}")
+        issues_out = []
+        llm_analysis_failed = True
+
+    # Signature of resolved issues (type, involved reqs) -> list of old descriptions
+    resolved_sigs = {}
+    for ri in resolved_issues:
+        reqs_tuple = tuple(sorted(ri.get_involved_req_ids()))
+        key = (ri.issue_type.value, reqs_tuple)
+        resolved_sigs.setdefault(key, []).append(ri.description)
+
+    # Save new issues, suppressing duplicates of resolved issues
+    for iss in issues_out:
+        reqs_tuple = tuple(sorted(iss.involved_req_ids))
+        key = (iss.issue_type.value, reqs_tuple)
+        
+        is_duplicate = False
+        if key in resolved_sigs:
+            new_desc_clean = iss.description.split("\n\nResolutions:")[0].strip()
+            for old_desc in resolved_sigs[key]:
+                old_desc_clean = old_desc.split("\n\nResolutions:")[0].strip()
+                if old_desc_clean == new_desc_clean or old_desc_clean in new_desc_clean or new_desc_clean in old_desc_clean:
+                    is_duplicate = True
+                    break
+                    
+        if is_duplicate:
+            continue  # Already resolved
+
         req_id_str = iss.involved_req_ids[0] if iss.involved_req_ids else None
-        req_db = None
-        if req_id_str:
-            req_db = session.exec(
-                select(Requirement).where(
-                    Requirement.project_id == project_id,
-                    Requirement.req_id == req_id_str
-                )
-            ).first()
+        req_db = next((r for r in reqs_db if r.req_id == req_id_str), None)
 
         issue = Issue(
             project_id=project_id,
@@ -204,14 +251,21 @@ def analyze_requirements(project_id: int, session: Session = Depends(get_session
             status=iss.status,
         )
         session.add(issue)
+        
     session.commit()
 
-    blocking = sum(1 for i in issues_out if i.severity == IssueSeverity.blocking and i.status == IssueStatus.open)
-    return {
-        "issue_count": len(issues_out),
+    all_issues_db = session.exec(select(Issue).where(Issue.project_id == project_id)).all()
+    issues_out_final = [_issue_to_out(i) for i in all_issues_db]
+    
+    blocking = sum(1 for i in issues_out_final if i.severity == IssueSeverity.blocking and i.status == IssueStatus.open)
+    response = {
+        "issue_count": len(issues_out_final),
         "blocking_count": blocking,
-        "issues": [i.model_dump() for i in issues_out],
+        "issues": [i.model_dump() for i in issues_out_final],
     }
+    if llm_analysis_failed:
+        response["llm_warning"] = "LLM semantic analysis unavailable (provider error). Showing deterministic issues only."
+    return response
 
 
 # ---------------------------------------------------------------------------
@@ -238,11 +292,11 @@ def _issue_to_out(i: Issue) -> IssueOut:
     )
 
 
-@router.post("/issues/{issue_id}/answer")
-def answer_issue(issue_id: str, body: AnswerRequest, session: Session = Depends(get_session)):
-    issue = session.exec(select(Issue).where(Issue.issue_id == issue_id)).first()
+@router.post("/projects/{project_id}/issues/{issue_id}/answer")
+def answer_issue(project_id: int, issue_id: str, body: AnswerRequest, session: Session = Depends(get_session)):
+    issue = session.exec(select(Issue).where(Issue.project_id == project_id, Issue.issue_id == issue_id)).first()
     if not issue:
-        raise HTTPException(404, f"Issue {issue_id} not found")
+        raise HTTPException(404, f"Issue {issue_id} not found for project {project_id}")
 
     issue.status = IssueStatus.answered
     issue.answer = body.answer
@@ -263,11 +317,11 @@ def answer_issue(issue_id: str, body: AnswerRequest, session: Session = Depends(
     return {"issue_id": issue_id, "status": "answered"}
 
 
-@router.post("/issues/{issue_id}/assume")
-def assume_issue(issue_id: str, body: AssumeRequest, session: Session = Depends(get_session)):
-    issue = session.exec(select(Issue).where(Issue.issue_id == issue_id)).first()
+@router.post("/projects/{project_id}/issues/{issue_id}/assume")
+def assume_issue(project_id: int, issue_id: str, body: AssumeRequest, session: Session = Depends(get_session)):
+    issue = session.exec(select(Issue).where(Issue.project_id == project_id, Issue.issue_id == issue_id)).first()
     if not issue:
-        raise HTTPException(404, f"Issue {issue_id} not found")
+        raise HTTPException(404, f"Issue {issue_id} not found for project {project_id}")
 
     issue.status = IssueStatus.assumed
     issue.assumption = body.assumption
@@ -305,21 +359,12 @@ def generate_artifacts(project_id: int, session: Session = Depends(get_session))
         raise HTTPException(400, f"Cannot generate: blocking issues still open: {blocking}")
 
     reqs_db = session.exec(select(Requirement).where(Requirement.project_id == project_id)).all()
-    from backend.models import ParsedRequirement, ParseResult, ConstraintSchema
-    parsed_reqs = []
-    for r in reqs_db:
-        constraints_raw = json.loads(r.constraints)
-        constraints = [ConstraintSchema(**c) for c in constraints_raw]
-        parsed_reqs.append(ParsedRequirement(
-            req_id=r.req_id,
-            text=r.text,
-            source_sentence=r.source_sentence,
-            entities=json.loads(r.entities),
-            actions=json.loads(r.actions),
-            constraints=constraints,
-        ))
-    parse_result = ParseResult(requirements=parsed_reqs)
-    req_ids = [r.req_id for r in parsed_reqs]
+    resolved_issues = session.exec(
+        select(Issue).where(Issue.project_id == project_id, Issue.status.in_([IssueStatus.answered, IssueStatus.assumed]))
+    ).all()
+    
+    parse_result = _build_effective_parse_result(reqs_db, resolved_issues)
+    req_ids = [r.req_id for r in parse_result.requirements]
 
     # Generate
     artifacts_out = generator.generate_all(parse_result, issues_out)

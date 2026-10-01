@@ -1,0 +1,2042 @@
+{
+  "documents": [
+    {
+      "project": "Banking Portal",
+      "requirements": [
+        {
+          "req_id": "REQ_0083",
+          "text": "The system shall enable manage of accounts",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0117",
+          "text": "The system shall enable generate of transactions",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0163",
+          "text": "The system shall enable manage of accounts",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0234",
+          "text": "The application shall support validate reports",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0450",
+          "text": "Users shall be able to manage reports",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0499",
+          "text": "The application shall support validate reports",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0743",
+          "text": "Page load time shall not exceed 30 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0818",
+          "text": "Page load time shall not exceed 30 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0930",
+          "text": "The system shall support multiple languages",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0966",
+          "text": "Error messages shall be clear and actionable",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0992",
+          "text": "The system shall support multiple languages",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1089",
+          "text": "The system shall provide diagnostic tools",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_1092",
+          "text": "The code shall be well-documented and modular",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_1119",
+          "text": "The system shall run on multiple operating systems",
+          "req_type": "Non-Functional",
+          "nfr_category": "Portability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_1135",
+          "text": "Environmental constraints shall be considered",
+          "req_type": "Non-Functional",
+          "nfr_category": "Others",
+          "labels": []
+        }
+      ],
+      "doc_id": "Banking_Portal",
+      "split": "test"
+    },
+    {
+      "project": "Credit Processing System",
+      "requirements": [
+        {
+          "req_id": "REQ_0310",
+          "text": "The application shall support update orders",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0492",
+          "text": "The application shall support update orders",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0528",
+          "text": "The system shall allow users to delete profiles",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0685",
+          "text": "The system shall allow users to delete profiles",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0730",
+          "text": "Database queries shall execute within 2 milliseconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0769",
+          "text": "The system shall respond to user requests within 2 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0778",
+          "text": "Page load time shall not exceed 10 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0786",
+          "text": "Database queries shall execute within 30 milliseconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0789",
+          "text": "Database queries shall execute within 30 milliseconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0835",
+          "text": "The system shall encrypt all sensitive data using RBAC",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0847",
+          "text": "Access control shall be implemented using RSA",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0877",
+          "text": "User authentication shall require RSA",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0949",
+          "text": "Error messages shall be clear and actionable",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0971",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague"
+          ]
+        },
+        {
+          "req_id": "REQ_1087",
+          "text": "The system shall support easy configuration updates",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": []
+        }
+      ],
+      "doc_id": "Credit_Processing_System",
+      "split": "test"
+    },
+    {
+      "project": "Fleet Management System",
+      "requirements": [
+        {
+          "req_id": "REQ_0301",
+          "text": "The system shall provide functionality to create orders",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0570",
+          "text": "The system shall allow users to update transactions",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0606",
+          "text": "The system shall provide functionality to create orders",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0653",
+          "text": "The system shall allow users to update orders",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0821",
+          "text": "User authentication shall require OAuth 2.0",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0823",
+          "text": "Access control shall be implemented using SSL/TLS",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0826",
+          "text": "Access control shall be implemented using AES-256",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0837",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0844",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0909",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0912",
+          "text": "User authentication shall require OAuth 2.0",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0926",
+          "text": "Error messages shall be clear and actionable",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0943",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague"
+          ]
+        },
+        {
+          "req_id": "REQ_1051",
+          "text": "The system shall handle errors gracefully",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_1083",
+          "text": "The system shall support easy configuration updates",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": []
+        }
+      ],
+      "doc_id": "Fleet_Management_System",
+      "split": "train"
+    },
+    {
+      "project": "Hospital Management System",
+      "requirements": [
+        {
+          "req_id": "REQ_0140",
+          "text": "The system shall provide functionality to create transactions",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0351",
+          "text": "The system shall allow users to delete profiles",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0362",
+          "text": "Users shall be able to delete reports",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0595",
+          "text": "Users shall be able to delete reports",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0652",
+          "text": "The application shall support create profiles",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0811",
+          "text": "Page load time shall not exceed 10 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0840",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0841",
+          "text": "Access control shall be implemented using OAuth 2.0",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0860",
+          "text": "User authentication shall require AES-256",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0876",
+          "text": "The system shall encrypt all sensitive data using SSL/TLS",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0880",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0885",
+          "text": "The system shall encrypt all sensitive data using SSL/TLS",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0894",
+          "text": "Access control shall be implemented using OAuth 2.0",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0934",
+          "text": "The system shall provide help documentation",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_1044",
+          "text": "The system shall handle errors gracefully",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": []
+        }
+      ],
+      "doc_id": "Hospital_Management_System",
+      "split": "train"
+    },
+    {
+      "project": "Inventory Management",
+      "requirements": [
+        {
+          "req_id": "REQ_0331",
+          "text": "The application shall support manage orders",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0444",
+          "text": "The application shall support manage orders",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0522",
+          "text": "The application shall support delete accounts",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0752",
+          "text": "Page load time shall not exceed 10 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0839",
+          "text": "Access control shall be implemented using SSL/TLS",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0868",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0870",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0889",
+          "text": "Access control shall be implemented using RSA",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0906",
+          "text": "User authentication shall require AES-256",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0928",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague"
+          ]
+        },
+        {
+          "req_id": "REQ_0951",
+          "text": "The system shall support multiple languages",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_1007",
+          "text": "The system shall have 99% uptime availability",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_1076",
+          "text": "The code shall be well-documented and modular",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1078",
+          "text": "The code shall be well-documented and modular",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1090",
+          "text": "Database schema changes shall be version controlled",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": []
+        }
+      ],
+      "doc_id": "Inventory_Management",
+      "split": "train"
+    },
+    {
+      "project": "Investment Management",
+      "requirements": [
+        {
+          "req_id": "REQ_0739",
+          "text": "Page load time shall not exceed 30 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0836",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0843",
+          "text": "User authentication shall require RSA",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0862",
+          "text": "Access control shall be implemented using AES-256",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0898",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0902",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0920",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague"
+          ]
+        },
+        {
+          "req_id": "REQ_0939",
+          "text": "The system shall provide help documentation",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0952",
+          "text": "The system shall provide help documentation",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0953",
+          "text": "The system shall provide help documentation",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1022",
+          "text": "Data backup shall occur every 5 hours",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_1035",
+          "text": "The system shall handle errors gracefully",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1054",
+          "text": "The system shall handle errors gracefully",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1077",
+          "text": "The code shall be well-documented and modular",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_1113",
+          "text": "The application shall be browser-independent",
+          "req_type": "Non-Functional",
+          "nfr_category": "Portability",
+          "labels": []
+        }
+      ],
+      "doc_id": "Investment_Management",
+      "split": "train"
+    },
+    {
+      "project": "Learning Management System",
+      "requirements": [
+        {
+          "req_id": "REQ_0042",
+          "text": "The system shall enable process of orders",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0235",
+          "text": "The system shall enable process of orders",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0491",
+          "text": "The system shall allow users to update transactions",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0510",
+          "text": "The system shall allow users to create records",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0586",
+          "text": "The system shall enable manage of accounts",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0813",
+          "text": "Page load time shall not exceed 60 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "inconsistent_target"
+          ]
+        },
+        {
+          "req_id": "REQ_0814",
+          "text": "Page load time shall not exceed 2 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "inconsistent_target"
+          ]
+        },
+        {
+          "req_id": "REQ_0827",
+          "text": "User authentication shall require RBAC",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0861",
+          "text": "User authentication shall require RBAC",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0884",
+          "text": "The system shall encrypt all sensitive data using RBAC",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0929",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0961",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1052",
+          "text": "Data backup shall occur every 2 hours",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_1080",
+          "text": "The system shall support easy configuration updates",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1100",
+          "text": "The system shall support easy configuration updates",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": [
+            "duplicate"
+          ]
+        }
+      ],
+      "doc_id": "Learning_Management_System",
+      "split": "test"
+    },
+    {
+      "project": "Logistics Platform",
+      "requirements": [
+        {
+          "req_id": "REQ_0169",
+          "text": "The system shall enable delete of accounts",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0295",
+          "text": "The system shall enable delete of accounts",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0385",
+          "text": "The system shall provide functionality to create profiles",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0628",
+          "text": "The system shall allow users to validate data",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0707",
+          "text": "The system shall allow users to validate data",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0833",
+          "text": "User authentication shall require RSA",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0918",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0964",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0983",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1005",
+          "text": "The system shall recover from failures within 60 minutes",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1013",
+          "text": "The system shall handle errors gracefully",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1040",
+          "text": "The system shall recover from failures within 60 minutes",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1048",
+          "text": "The system shall handle errors gracefully",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1085",
+          "text": "The system shall provide diagnostic tools",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1093",
+          "text": "The system shall provide diagnostic tools",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": [
+            "duplicate"
+          ]
+        }
+      ],
+      "doc_id": "Logistics_Platform",
+      "split": "train"
+    },
+    {
+      "project": "Online Examination",
+      "requirements": [
+        {
+          "req_id": "REQ_0381",
+          "text": "Users shall be able to validate profiles",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0737",
+          "text": "The system shall respond to user requests within 30 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0762",
+          "text": "The system shall respond to user requests within 30 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0832",
+          "text": "Access control shall be implemented using SSL/TLS",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0838",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0848",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0850",
+          "text": "User authentication shall require SSL/TLS",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0857",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0936",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague"
+          ]
+        },
+        {
+          "req_id": "REQ_0938",
+          "text": "The system shall provide help documentation",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0955",
+          "text": "The system shall provide help documentation",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1012",
+          "text": "The system shall handle errors gracefully",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1028",
+          "text": "Data backup shall occur every 60 hours",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "inconsistent_target"
+          ]
+        },
+        {
+          "req_id": "REQ_1036",
+          "text": "The system shall handle errors gracefully",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1047",
+          "text": "Data backup shall occur every 30 hours",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "inconsistent_target"
+          ]
+        }
+      ],
+      "doc_id": "Online_Examination",
+      "split": "train"
+    },
+    {
+      "project": "Online Shopping Platform",
+      "requirements": [
+        {
+          "req_id": "REQ_0132",
+          "text": "The application shall support create profiles",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0407",
+          "text": "The system shall enable process of orders",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0597",
+          "text": "The system shall allow users to process profiles",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0723",
+          "text": "The system shall respond to user requests within 30 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0740",
+          "text": "The system shall respond to user requests within 5 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0812",
+          "text": "The system shall respond to user requests within 30 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0874",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0881",
+          "text": "The system shall log all security events",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0954",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0960",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0996",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1008",
+          "text": "The system shall handle errors gracefully",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1026",
+          "text": "The system shall have 99% uptime availability",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_1063",
+          "text": "The system shall handle errors gracefully",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1073",
+          "text": "The code shall be well-documented and modular",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": []
+        }
+      ],
+      "doc_id": "Online_Shopping_Platform",
+      "split": "train"
+    },
+    {
+      "project": "Patient Records System",
+      "requirements": [
+        {
+          "req_id": "REQ_0134",
+          "text": "Users shall be able to delete payments",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0148",
+          "text": "The system shall provide functionality to process profiles",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0231",
+          "text": "The system shall allow users to generate reports",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0568",
+          "text": "The application shall support delete transactions",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0669",
+          "text": "The application shall support delete transactions",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0715",
+          "text": "The system shall allow users to generate reports",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0728",
+          "text": "Database queries shall execute within 60 milliseconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0791",
+          "text": "The system shall support up to 10000 concurrent users",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0800",
+          "text": "The system shall support up to 10000 concurrent users",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0807",
+          "text": "Database queries shall execute within 60 milliseconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0828",
+          "text": "User authentication shall require JWT",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0895",
+          "text": "User authentication shall require JWT",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0917",
+          "text": "The system shall support multiple languages",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0945",
+          "text": "The system shall support multiple languages",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1130",
+          "text": "The system shall comply with industry standards",
+          "req_type": "Non-Functional",
+          "nfr_category": "Others",
+          "labels": []
+        }
+      ],
+      "doc_id": "Patient_Records_System",
+      "split": "train"
+    },
+    {
+      "project": "Payment Gateway",
+      "requirements": [
+        {
+          "req_id": "REQ_0056",
+          "text": "The application shall support generate payments",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0364",
+          "text": "The system shall provide functionality to generate orders",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0366",
+          "text": "The system shall provide functionality to generate orders",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0383",
+          "text": "The application shall support generate payments",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0554",
+          "text": "The system shall provide functionality to process profiles",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0598",
+          "text": "The system shall enable validate of data",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0830",
+          "text": "User authentication shall require RSA",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0845",
+          "text": "Access control shall be implemented using AES-256",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0878",
+          "text": "User authentication shall require RSA",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0925",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0933",
+          "text": "The system shall support multiple languages",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0958",
+          "text": "The system shall support multiple languages",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0993",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1014",
+          "text": "The system shall handle errors gracefully",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1062",
+          "text": "The system shall handle errors gracefully",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        }
+      ],
+      "doc_id": "Payment_Gateway",
+      "split": "train"
+    },
+    {
+      "project": "Student Information System",
+      "requirements": [
+        {
+          "req_id": "REQ_0034",
+          "text": "The system shall provide functionality to view data",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0118",
+          "text": "The system shall allow users to update data",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0306",
+          "text": "The system shall allow users to update data",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0315",
+          "text": "The system shall provide functionality to create records",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0583",
+          "text": "The system shall provide functionality to create records",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0732",
+          "text": "Page load time shall not exceed 30 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate",
+            "inconsistent_target"
+          ]
+        },
+        {
+          "req_id": "REQ_0779",
+          "text": "The system shall support up to 100 concurrent users",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0783",
+          "text": "The system shall support up to 500 concurrent users",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0797",
+          "text": "Page load time shall not exceed 5 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "inconsistent_target"
+          ]
+        },
+        {
+          "req_id": "REQ_0817",
+          "text": "Page load time shall not exceed 30 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate",
+            "inconsistent_target"
+          ]
+        },
+        {
+          "req_id": "REQ_0820",
+          "text": "The system shall support up to 100 concurrent users",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0869",
+          "text": "User authentication shall require RSA",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0871",
+          "text": "The system shall encrypt all sensitive data using JWT",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0923",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague"
+          ]
+        },
+        {
+          "req_id": "REQ_1021",
+          "text": "Data backup shall occur every 2 hours",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": []
+        }
+      ],
+      "doc_id": "Student_Information_System",
+      "split": "train"
+    },
+    {
+      "project": "Telemedicine Platform",
+      "requirements": [
+        {
+          "req_id": "REQ_0022",
+          "text": "The system shall provide functionality to view payments",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0194",
+          "text": "The system shall enable generate of payments",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0274",
+          "text": "The system shall allow users to create records",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0360",
+          "text": "The system shall allow users to create records",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0718",
+          "text": "The system shall provide functionality to view payments",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0772",
+          "text": "Page load time shall not exceed 10 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0773",
+          "text": "Page load time shall not exceed 10 seconds",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0883",
+          "text": "The system shall encrypt all sensitive data using OAuth 2.0",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0910",
+          "text": "Access control shall be implemented using RSA",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0963",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0968",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0973",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0985",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1033",
+          "text": "The system shall have 99.9% uptime availability",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1034",
+          "text": "The system shall have 99.9% uptime availability",
+          "req_type": "Non-Functional",
+          "nfr_category": "Reliability",
+          "labels": [
+            "duplicate"
+          ]
+        }
+      ],
+      "doc_id": "Telemedicine_Platform",
+      "split": "train"
+    },
+    {
+      "project": "Traffic Control System",
+      "requirements": [
+        {
+          "req_id": "REQ_0225",
+          "text": "The system shall enable update of accounts",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0378",
+          "text": "The system shall enable update of accounts",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0464",
+          "text": "Users shall be able to validate transactions",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0469",
+          "text": "The system shall provide functionality to create profiles",
+          "req_type": "Functional",
+          "nfr_category": null,
+          "labels": []
+        },
+        {
+          "req_id": "REQ_0745",
+          "text": "The system shall support up to 500 concurrent users",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0757",
+          "text": "The system shall support up to 500 concurrent users",
+          "req_type": "Non-Functional",
+          "nfr_category": "Performance",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0829",
+          "text": "The system shall encrypt all sensitive data using JWT",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0875",
+          "text": "User authentication shall require SSL/TLS",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0907",
+          "text": "User authentication shall require SSL/TLS",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch",
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0911",
+          "text": "The system shall encrypt all sensitive data using RBAC",
+          "req_type": "Non-Functional",
+          "nfr_category": "Security",
+          "labels": [
+            "mechanism_mismatch"
+          ]
+        },
+        {
+          "req_id": "REQ_0924",
+          "text": "The system shall support multiple languages",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0950",
+          "text": "The user interface shall be intuitive and user-friendly",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "vague"
+          ]
+        },
+        {
+          "req_id": "REQ_0988",
+          "text": "The system shall support multiple languages",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_0991",
+          "text": "The system shall support multiple languages",
+          "req_type": "Non-Functional",
+          "nfr_category": "Usability",
+          "labels": [
+            "duplicate"
+          ]
+        },
+        {
+          "req_id": "REQ_1079",
+          "text": "The system shall support easy configuration updates",
+          "req_type": "Non-Functional",
+          "nfr_category": "Maintainability",
+          "labels": []
+        }
+      ],
+      "doc_id": "Traffic_Control_System",
+      "split": "train"
+    }
+  ]
+}

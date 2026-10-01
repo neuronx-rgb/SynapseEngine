@@ -34,12 +34,13 @@ Reply with exactly this JSON and nothing else:
 
 
 def test_gemini():
-    from backend.llm import _call_gemini, GEMINI_API_KEY
+    from backend.llm import GeminiProvider, GEMINI_API_KEY
     if not GEMINI_API_KEY:
         print("  SKIP: GEMINI_API_KEY not set")
         return False
     try:
-        raw = _call_gemini(PING_PROMPT)
+        provider = GeminiProvider()
+        raw = provider.generate(PING_PROMPT)
         print(f"  Gemini raw response: {raw[:200]}")
         print("  ✅ Gemini OK")
         return True
@@ -49,12 +50,13 @@ def test_gemini():
 
 
 def test_groq():
-    from backend.llm import _call_groq, GROQ_API_KEY
+    from backend.llm import GroqProvider, GROQ_API_KEY
     if not GROQ_API_KEY:
         print("  SKIP: GROQ_API_KEY not set")
         return False
     try:
-        raw = _call_groq(PING_PROMPT)
+        provider = GroqProvider()
+        raw = provider.generate(PING_PROMPT)
         print(f"  Groq raw response: {raw[:200]}")
         print("  ✅ Groq OK")
         return True

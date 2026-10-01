@@ -23,7 +23,7 @@ def _get_backend_url() -> str:
 
 
 BACKEND_URL = _get_backend_url()
-TIMEOUT = 60.0
+TIMEOUT = 180.0
 
 
 class APIClient:
@@ -67,11 +67,11 @@ class APIClient:
     def get_issues(self, project_id: int) -> list:
         return self._get(f"/projects/{project_id}/issues")
 
-    def answer_issue(self, issue_id: str, answer: str) -> dict:
-        return self._post(f"/issues/{issue_id}/answer", json={"answer": answer})
+    def answer_issue(self, project_id: int, issue_id: str, answer: str) -> dict:
+        return self._post(f"/projects/{project_id}/issues/{issue_id}/answer", json={"answer": answer})
 
-    def assume_issue(self, issue_id: str, assumption: str = "default behavior assumed") -> dict:
-        return self._post(f"/issues/{issue_id}/assume", json={"assumption": assumption})
+    def assume_issue(self, project_id: int, issue_id: str, assumption: str = "default behavior assumed") -> dict:
+        return self._post(f"/projects/{project_id}/issues/{issue_id}/assume", json={"assumption": assumption})
 
     # Generation
     def generate(self, project_id: int) -> dict:

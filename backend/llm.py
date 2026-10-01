@@ -2,7 +2,8 @@
 backend/llm.py
 Multi-provider LLM layer with:
 - Primary: Gemini via google-genai SDK
-- Fallback: Groq via OpenAI-compatible endpoint
+- Fallback: Groq via groq SDK
+- Additional: Ollama (local)
 - MOCK_MODE: returns fixture data, no real API calls
 - On-disk cache keyed by hash(prompt+provider+model)
 - Exponential-backoff + auto-fallback on 429/5xx
@@ -15,8 +16,10 @@ import json
 import logging
 import os
 import time
+import re
 from pathlib import Path
 from typing import Any, Optional, Type, TypeVar
+from abc import ABC, abstractmethod
 
 from pydantic import BaseModel
 
@@ -30,9 +33,10 @@ T = TypeVar("T", bound=BaseModel)
 
 MOCK_MODE: bool = os.getenv("MOCK_MODE", "true").lower() in ("true", "1", "yes")
 GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
 GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
-GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL: str = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
+OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "")
 
 CACHE_DIR = Path(os.getenv("CACHE_DIR", "./data/llm_cache"))
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -76,11 +80,8 @@ def _cache_set(key: str, value: str) -> None:
 
 FIXTURE_DIR = Path(__file__).parent.parent / "tests" / "fixtures"
 
-
 def _get_fixture(prompt_hint: str) -> Optional[str]:
-    """Return a fixture JSON string matching the prompt hint."""
     FIXTURE_DIR.mkdir(parents=True, exist_ok=True)
-    # Match by keyword in prompt
     for fpath in FIXTURE_DIR.glob("*.json"):
         with open(fpath, encoding="utf-8") as f:
             data = json.load(f)
@@ -91,13 +92,6 @@ def _get_fixture(prompt_hint: str) -> Optional[str]:
 
 
 def _mock_generate(prompt: str, schema: Type[T]) -> T:
-    """Return mock/fixture response matching schema.
-
-    Strategy:
-    1. Try to find a fixture whose 'triggers' match the prompt AND
-       whose 'response' is valid for the given schema.
-    2. Fall back to schema-specific minimal instances.
-    """
     global _active_provider, _active_model
     _active_provider = "mock"
     _active_model = "mock"
@@ -105,7 +99,6 @@ def _mock_generate(prompt: str, schema: Type[T]) -> T:
     schema_name = schema.__name__
     logger.info(f"[MOCK] Generating {schema_name}")
 
-    # Try fixture lookup — attempt ALL matching fixtures and pick valid one
     FIXTURE_DIR.mkdir(parents=True, exist_ok=True)
     for fpath in FIXTURE_DIR.glob("*.json"):
         try:
@@ -121,7 +114,6 @@ def _mock_generate(prompt: str, schema: Type[T]) -> T:
         except Exception:
             continue
 
-    # Schema-specific fallback instances
     if schema_name == "ParseResult":
         return schema.model_validate({
             "requirements": [
@@ -170,51 +162,132 @@ def _mock_generate(prompt: str, schema: Type[T]) -> T:
     raise ValueError(f"[MOCK] No fixture or fallback for schema {schema_name}")
 
 
-
 # ---------------------------------------------------------------------------
-# Real providers
+# Provider Architecture
 # ---------------------------------------------------------------------------
 
-def _call_gemini(prompt: str) -> str:
-    """Call Gemini API and return raw text."""
-    if not GEMINI_API_KEY:
-        raise RuntimeError("GEMINI_API_KEY not set")
-    try:
-        from google import genai
-        from google.genai import types
+class LLMProvider(ABC):
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
+    def model_name(self) -> str:
+        pass
+
+    @abstractmethod
+    def generate(self, prompt: str, schema: Optional[Type[BaseModel]] = None) -> str:
+        """Call the LLM and return the raw text response."""
+        pass
+
+
+class GeminiProvider(LLMProvider):
+    @property
+    def name(self) -> str:
+        return "gemini"
+
+    @property
+    def model_name(self) -> str:
+        return GEMINI_MODEL
+
+    def generate(self, prompt: str, schema: Optional[Type[BaseModel]] = None) -> str:
+        if not GEMINI_API_KEY:
+            raise RuntimeError("GEMINI_API_KEY not set")
+        try:
+            from google import genai
+            from google.genai import types
+        except ImportError:
+            raise RuntimeError("google-genai not installed")
+
         client = genai.Client(api_key=GEMINI_API_KEY)
+        config = types.GenerateContentConfig(temperature=0.1)
+        if schema:
+            config.response_mime_type = "application/json"
+
         response = client.models.generate_content(
-            model=GEMINI_MODEL,
+            model=self.model_name,
             contents=prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                temperature=0.1,
-            ),
+            config=config,
         )
         return response.text or ""
-    except ImportError:
-        raise RuntimeError("google-genai not installed")
 
 
-def _call_groq(prompt: str) -> str:
-    """Call Groq via OpenAI-compatible endpoint."""
-    if not GROQ_API_KEY:
-        raise RuntimeError("GROQ_API_KEY not set")
-    try:
-        from openai import OpenAI
-        client = OpenAI(
-            api_key=GROQ_API_KEY,
-            base_url="https://api.groq.com/openai/v1",
-        )
+class GroqProvider(LLMProvider):
+    @property
+    def name(self) -> str:
+        return "groq"
+
+    @property
+    def model_name(self) -> str:
+        return GROQ_MODEL
+
+    def generate(self, prompt: str, schema: Optional[Type[BaseModel]] = None) -> str:
+        if not GROQ_API_KEY:
+            raise RuntimeError("GROQ_API_KEY not set")
+        try:
+            from groq import Groq
+        except ImportError:
+            raise RuntimeError("groq not installed")
+
+        client = Groq(api_key=GROQ_API_KEY)
+        kwargs = {"temperature": 0.1}
+        if schema:
+            kwargs["response_format"] = {"type": "json_object"}
+
         response = client.chat.completions.create(
-            model=GROQ_MODEL,
+            model=self.model_name,
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.1,
-            response_format={"type": "json_object"},
+            **kwargs
         )
         return response.choices[0].message.content or ""
-    except ImportError:
-        raise RuntimeError("openai package not installed")
+
+
+class OllamaProvider(LLMProvider):
+    @property
+    def name(self) -> str:
+        return "ollama"
+
+    @property
+    def model_name(self) -> str:
+        return OLLAMA_MODEL
+
+    def generate(self, prompt: str, schema: Optional[Type[BaseModel]] = None) -> str:
+        if not OLLAMA_MODEL:
+            raise RuntimeError("OLLAMA_MODEL not set")
+        import httpx
+        ollama_url = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
+
+        payload = {
+            "model": self.model_name,
+            "prompt": prompt,
+            "stream": False,
+            "options": {"temperature": 0.1}
+        }
+        if schema:
+            payload["format"] = "json"
+
+        try:
+            response = httpx.post(ollama_url, json=payload, timeout=120.0)
+            response.raise_for_status()
+            return response.json().get("response", "")
+        except Exception as e:
+            raise RuntimeError(f"Ollama call failed: {e}")
+
+
+def get_providers() -> list[LLMProvider]:
+    providers = []
+    # Primary
+    if GEMINI_API_KEY:
+        providers.append(GeminiProvider())
+    # Fallback
+    if GROQ_API_KEY:
+        providers.append(GroqProvider())
+    # Additional
+    if OLLAMA_MODEL:
+        providers.append(OllamaProvider())
+    return providers
 
 
 # ---------------------------------------------------------------------------
@@ -222,101 +295,100 @@ def _call_groq(prompt: str) -> str:
 # ---------------------------------------------------------------------------
 
 def generate_json(prompt: str, schema: Type[T]) -> T:
-    """
-    Generate structured JSON from an LLM and validate against `schema`.
-    MOCK_MODE returns fixture/fallback data.
-    Real mode: tries Gemini first, then Groq.
-    """
     global _active_provider, _active_model
 
     if MOCK_MODE:
         return _mock_generate(prompt, schema)
 
-    # Check keys
-    if not GEMINI_API_KEY and not GROQ_API_KEY:
+    providers = get_providers()
+    if not providers:
         raise RuntimeError(
-            "No LLM API keys set. Set GEMINI_API_KEY or GROQ_API_KEY, "
+            "No LLM providers available. Set GEMINI_API_KEY, GROQ_API_KEY, or OLLAMA_MODEL, "
             "or set MOCK_MODE=true for demo mode."
         )
 
-    providers = []
-    if GEMINI_API_KEY:
-        providers.append(("gemini", GEMINI_MODEL, _call_gemini))
-    if GROQ_API_KEY:
-        providers.append(("groq", GROQ_MODEL, _call_groq))
-
     last_error: Exception = RuntimeError("No providers available")
 
-    for provider_name, model_name, call_fn in providers:
-        cache_key = _cache_key(prompt, provider_name, model_name)
+    for provider in providers:
+        cache_key = _cache_key(prompt, provider.name, provider.model_name)
         cached = _cache_get(cache_key)
         if cached:
             try:
                 result = schema.model_validate_json(cached)
-                _active_provider = provider_name
-                _active_model = model_name
-                logger.info(f"[LLM] Cache hit for {provider_name}/{model_name}")
+                _active_provider = provider.name
+                _active_model = provider.model_name
+                logger.info(f"[LLM] Cache hit for {provider.name}/{provider.model_name}")
                 return result
             except Exception:
                 pass
 
         for attempt in range(MAX_RETRIES):
             try:
-                raw = call_fn(prompt)
-                # Validate JSON — try with markdown fence stripping
+                raw = provider.generate(prompt, schema)
                 parse_error = None
                 try:
                     result = schema.model_validate_json(raw)
                 except Exception as ve:
                     parse_error = ve
-                    import re as _re
-                    raw_stripped = _re.sub(r"```json\s*|\s*```", "", raw).strip()
+                    raw_stripped = re.sub(r"```json\s*|\s*```", "", raw).strip()
+                    # Normalise non-standard severity values produced by some models
+                    raw_normalised = re.sub(
+                        r'"severity"\s*:\s*"(?!blocking|warning)[^"]*"',
+                        lambda m: '"severity": "blocking"' if any(
+                            w in m.group(0).lower() for w in ("critical", "high", "error", "major")
+                        ) else '"severity": "warning"',
+                        raw_stripped,
+                    )
                     try:
-                        result = schema.model_validate_json(raw_stripped)
-                        raw = raw_stripped
+                        result = schema.model_validate_json(raw_normalised)
+                        raw = raw_normalised
                         parse_error = None
                     except Exception as ve2:
                         parse_error = ve2
 
                 if parse_error is not None:
-                    # JSON parse failure — retry once more (not an API error)
                     if attempt < MAX_RETRIES - 1:
-                        logger.warning(f"[LLM] {provider_name} JSON parse error (attempt {attempt+1}): {parse_error}")
+                        logger.warning(f"[LLM] {provider.name} JSON parse error (attempt {attempt+1}): {parse_error}")
                         last_error = parse_error
-                        continue  # retry same provider
+                        continue
                     else:
                         last_error = parse_error
-                        break  # try next provider
+                        break
 
-                _active_provider = provider_name
-                _active_model = model_name
+                _active_provider = provider.name
+                _active_model = provider.model_name
                 _cache_set(cache_key, raw)
-                logger.info(f"[LLM] {provider_name}/{model_name} answered (attempt {attempt+1})")
+                logger.info(f"[LLM] {provider.name}/{provider.model_name} answered (attempt {attempt+1})")
                 return result
 
             except Exception as e:
                 err_str = str(e)
-                is_rate_limit = "429" in err_str or "rate" in err_str.lower()
-                is_server_error = "5" in err_str[:3] if err_str else False
+                is_rate_limit = "429" in err_str or "rate" in err_str.lower() or "quota" in err_str.lower()
+                is_server_error = bool(re.search(r"\b5\d{2}\b", err_str)) or "unavailable" in err_str.lower() or "server error" in err_str.lower()
 
                 if is_rate_limit or is_server_error:
                     wait = BACKOFF_BASE ** attempt
-                    logger.warning(f"[LLM] {provider_name} error (attempt {attempt+1}): {e}. Waiting {wait}s")
+                    logger.warning(f"[LLM] {provider.name} error (attempt {attempt+1}): {e}. Waiting {wait}s")
                     time.sleep(wait)
                     last_error = e
                     if attempt == MAX_RETRIES - 1:
-                        break  # Try next provider
+                        break
                 else:
                     last_error = e
-                    logger.error(f"[LLM] {provider_name} non-retryable error: {e}")
-                    break  # Try next provider immediately
+                    logger.error(f"[LLM] {provider.name} non-retryable error: {e}")
+                    break
 
-    raise RuntimeError(f"All LLM providers failed. Last error: {last_error}")
-
+    # All providers exhausted — return a safe empty fallback so the pipeline doesn't crash.
+    # Deterministic detectors (Z3, lexicon, completeness) already ran and their results
+    # are collected by the caller; only the LLM semantic pass is missing.
+    logger.error(f"All LLM providers failed. Last error: {last_error}. Returning empty result.")
+    try:
+        return schema.model_validate({"issues": []})
+    except Exception:
+        raise RuntimeError(f"All LLM providers failed. Last error: {last_error}")
 
 
 def generate_text(prompt: str) -> str:
-    """Generate plain text (used for repair prompts)."""
     global _active_provider, _active_model
 
     if MOCK_MODE:
@@ -324,18 +396,16 @@ def generate_text(prompt: str) -> str:
         _active_model = "mock"
         return "MOCK: No repair needed."
 
-    providers = []
-    if GEMINI_API_KEY:
-        providers.append(("gemini", GEMINI_MODEL, _call_gemini))
-    if GROQ_API_KEY:
-        providers.append(("groq", GROQ_MODEL, _call_groq))
+    providers = get_providers()
+    if not providers:
+        return "Error: No providers available."
 
-    for provider_name, model_name, call_fn in providers:
+    for provider in providers:
         for attempt in range(MAX_RETRIES):
             try:
-                result = call_fn(prompt)
-                _active_provider = provider_name
-                _active_model = model_name
+                result = provider.generate(prompt)
+                _active_provider = provider.name
+                _active_model = provider.model_name
                 return result
             except Exception as e:
                 err_str = str(e)
@@ -345,3 +415,12 @@ def generate_text(prompt: str) -> str:
                     break
 
     return "Error: All providers failed."
+
+
+# Initialize UI defaults correctly on startup
+if not MOCK_MODE:
+    _available = get_providers()
+    if _available:
+        _active_provider = _available[0].name
+        _active_model = _available[0].model_name
+

@@ -24,6 +24,12 @@ from backend.models import (
     ParseResult,
     ParsedRequirement,
 )
+from backend.pipeline.detectors import (
+    detect_duplicates,
+    detect_mechanism_mismatches,
+    detect_inconsistent_targets,
+    detect_z3_subsumptions,
+)
 
 # ---------------------------------------------------------------------------
 # (a) Ambiguity — Lexicon / Regex pass
@@ -253,16 +259,16 @@ def _detect_conflicts_llm(requirements: List[ParsedRequirement]) -> List[dict]:
 # ---------------------------------------------------------------------------
 
 COMPLETENESS_CHECKLIST = [
-    ("auth", r"\b(login|auth|authenticat|token|session|permission|role|access)\b"),
-    ("validation_limits", r"\b(validat|limit|max|min|length|size|format|constraint)\b"),
-    ("error_cases", r"\b(error|fail|exception|invalid|reject|not found|404|500)\b"),
-    ("delete_retention", r"\b(delet|remov|retain|archive|purge|expir)\b"),
-    ("boundary", r"\b(boundary|edge case|overflow|zero|empty|null)\b"),
+    # (area, presence_pattern, trigger_pattern)
+    ("auth", r"\b(login|auth|authenticat|token|session|permission|role|access)\b", r"\b(users?|accounts?|admins?|customers?|patients?|students?|portals?)\b"),
+    ("validation_limits", r"\b(validat|limit|max|min|length|size|format|constraint)\b", r"\b(inputs?|forms?|uploads?|passwords?|amounts?|prices?|dates?|emails?)\b"),
+    ("error_cases", r"\b(error|fail|exception|invalid|reject|not found|404|500)\b", r"\b(apis?|endpoints?|requests?|transactions?|payments?|submits?|process)\b"),
+    ("delete_retention", r"\b(delet|remov|retain|archive|purge|expir)\b", r"\b(data|records?|accounts?|history|logs?|files?|images?)\b"),
+    ("boundary", r"\b(boundary|edge case|overflow|zero|empty|null)\b", r"\b(calculate|compute|aggregate|sum|average|discount|tax)\b"),
 ]
 
-
 def _detect_completeness(requirements: List[ParsedRequirement]) -> List[dict]:
-    """Check each entity group for missing specification areas."""
+    """Check each entity group for missing specification areas based on triggers."""
     issues = []
     issue_counter = [0]
 
@@ -271,26 +277,33 @@ def _detect_completeness(requirements: List[ParsedRequirement]) -> List[dict]:
         return f"ISS-C-{issue_counter[0]:03d}"
 
     all_text = " ".join(r.text for r in requirements).lower()
-    req_ids = [r.req_id for r in requirements]
-
-    for area, pattern in COMPLETENESS_CHECKLIST:
-        if not re.search(pattern, all_text, re.IGNORECASE):
-            questions = {
-                "auth": "Are there authentication and authorization requirements? Who can access what?",
-                "validation_limits": "What are the validation rules and limits for inputs? (length, format, range)",
-                "error_cases": "What should happen on errors, invalid input, or system failure?",
-                "delete_retention": "What are the data deletion and retention policies?",
-                "boundary": "Are boundary/edge cases specified? (empty inputs, maximum values, etc.)",
-            }
-            issues.append({
-                "issue_id": next_id(),
-                "issue_type": IssueType.incompleteness,
-                "severity": IssueSeverity.warning,
-                "involved_req_ids": req_ids[:3],  # General concern
-                "description": f"No requirements cover '{area}' — potentially missing specification area.",
-                "suggested_question": questions.get(area, f"Please specify requirements for {area}."),
-                "status": IssueStatus.open,
-            })
+    
+    # We want to associate the issue with the specific requirement that triggered it
+    for area, presence_pat, trigger_pat in COMPLETENESS_CHECKLIST:
+        if not re.search(presence_pat, all_text, re.IGNORECASE):
+            # Find which requirements activated the trigger
+            triggered_reqs = []
+            for r in requirements:
+                if re.search(trigger_pat, r.text, re.IGNORECASE):
+                    triggered_reqs.append(r.req_id)
+            
+            if triggered_reqs:
+                questions = {
+                    "auth": "Are there authentication and authorization requirements? Who can access what?",
+                    "validation_limits": "What are the validation rules and limits for inputs? (length, format, range)",
+                    "error_cases": "What should happen on errors, invalid input, or system failure?",
+                    "delete_retention": "What are the data deletion and retention policies?",
+                    "boundary": "Are boundary/edge cases specified? (empty inputs, maximum values, etc.)",
+                }
+                issues.append({
+                    "issue_id": next_id(),
+                    "issue_type": IssueType.incompleteness,
+                    "severity": IssueSeverity.warning,
+                    "involved_req_ids": triggered_reqs[:3],  # Cap to top 3 relevant
+                    "description": f"Missing '{area}' requirements for mentioned entities.",
+                    "suggested_question": questions.get(area, f"Please specify requirements for {area}."),
+                    "status": IssueStatus.open,
+                })
 
     return issues
 
@@ -362,9 +375,20 @@ def analyze(parse_result: ParseResult) -> List[IssueOut]:
     all_issues.extend(_detect_ambiguity_lexicon(requirements))
     all_issues.extend(_detect_ambiguity_llm(requirements))
 
-    # (b) Conflict
+    # (b) Conflict — Z3 hard contradictions (blocking)
     all_issues.extend(_detect_conflicts_z3(requirements))
+    # (b) Conflict — Z3 subsumptions / inconsistent targets (warning)
+    all_issues.extend(detect_z3_subsumptions(requirements))
+    # (b) Conflict — LLM semantic pass
     all_issues.extend(_detect_conflicts_llm(requirements))
+
+    # (b) Conflict — deterministic duplicate detection (warning)
+    all_issues.extend(detect_duplicates(requirements))
+    # (b) Conflict — inconsistent metric targets (warning)
+    all_issues.extend(detect_inconsistent_targets(requirements))
+
+    # (a) Ambiguity — mechanism mismatch for security statements (blocking)
+    all_issues.extend(detect_mechanism_mismatches(requirements))
 
     # (c) Completeness
     all_issues.extend(_detect_completeness(requirements))

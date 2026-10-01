@@ -1,5 +1,6 @@
 import os
 import json
+import base64
 import streamlit as st
 import streamlit.components.v1 as components
 
@@ -13,7 +14,15 @@ def render_hero():
         manifest = json.load(f)
         
     frames = manifest["frames"]
-    frame_urls = [f"/app/static/hero/{fname}" for fname in frames]
+    
+    # Pre-encode all images into base64 to bypass CORS/static path issues on cloud
+    b64_images = []
+    for fname in frames:
+        fpath = os.path.join("static", "hero", fname)
+        if os.path.exists(fpath):
+            with open(fpath, "rb") as img_file:
+                b64 = base64.b64encode(img_file.read()).decode("utf-8")
+                b64_images.append(f"data:image/jpeg;base64,{b64}")
     
     html_code = f"""
     <!DOCTYPE html>
@@ -26,7 +35,7 @@ def render_hero():
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #05080A;
+            background-color: transparent;
         }}
         canvas {{
             display: block;
@@ -40,20 +49,20 @@ def render_hero():
     <body>
         <canvas id="heroCanvas"></canvas>
         <script>
-            const urls = {json.dumps(frame_urls)};
+            const b64_urls = {json.dumps(b64_images)};
             const images = [];
             let loaded = 0;
             const canvas = document.getElementById('heroCanvas');
             const ctx = canvas.getContext('2d');
             
             // Preload images
-            for(let i = 0; i < urls.length; i++) {{
+            for(let i = 0; i < b64_urls.length; i++) {{
                 const img = new Image();
-                img.src = urls[i];
+                img.src = b64_urls[i];
                 img.onload = () => {{
                     loaded++;
-                    if(loaded === urls.length) {{
-                        drawFrame(0);
+                    if(loaded === b64_urls.length) {{
+                        drawFrame(Math.floor(b64_urls.length / 2));
                     }}
                 }};
                 images.push(img);
@@ -63,7 +72,6 @@ def render_hero():
                 if (images.length === 0 || !images[index]) return;
                 const img = images[index];
                 
-                // Set canvas size to match image aspect ratio
                 canvas.width = img.width;
                 canvas.height = img.height;
                 
@@ -72,7 +80,7 @@ def render_hero():
             }}
             
             // Cursor tracking logic
-            let currentFrame = Math.floor(urls.length / 2);
+            let currentFrame = Math.floor(b64_urls.length / 2);
             let targetFrame = currentFrame;
             
             function animate() {{
@@ -103,7 +111,7 @@ def render_hero():
                     window.parent.document.addEventListener('mousemove', mouseHandler);
                 }}
             }} catch (e) {{
-                // CORS or parent access failed, fallback to local document
+                // Fallback
                 document.addEventListener('mousemove', mouseHandler);
             }}
         </script>

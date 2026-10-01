@@ -11,14 +11,14 @@ import threading
 import logging
 import streamlit as st
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 st.set_page_config(
     page_title="Synapse Engine",
     page_icon="⚡",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
-
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 try:
     from dotenv import load_dotenv
@@ -80,12 +80,11 @@ from frontend.theme import inject_theme
 from frontend.api_client import get_client
 from frontend.utils import ss, set_ss
 
-
 inject_theme()
 
 st.logo("static/logo.svg")
 
-# Status strip in sidebar
+# Status strip under the navbar
 def render_status_strip():
     client = get_client()
     try:
@@ -103,45 +102,51 @@ def render_status_strip():
         status_text = "🔴 Backend offline"
         provider_text = "Unknown"
 
-    st.sidebar.markdown(f"**Status:** {status_text}")
-    st.sidebar.markdown(f"**Backend:** {provider_text}")
-    st.sidebar.divider()
-
-    st.sidebar.markdown("### Projects")
-    project_id = ss("project_id")
+    col1, col2, col3, _ = st.columns([2, 2, 2, 6])
     
-    try:
-        all_projects = client._get("/projects")
-        if all_projects:
-            proj_options = {p['id']: f"#{p['id']} - {p['name']}" for p in all_projects}
+    with col1:
+        with st.popover("📁 Project"):
+            st.markdown("### Projects")
+            project_id = ss("project_id")
             
-            # Find index of current project
-            idx = 0
-            if project_id and project_id in proj_options:
-                idx = list(proj_options.keys()).index(project_id)
-                
-            selected_id = st.sidebar.selectbox("Select Project", options=list(proj_options.keys()), format_func=lambda x: proj_options[x], index=idx, label_visibility="collapsed")
-            
-            if selected_id != project_id:
-                set_ss("project_id", selected_id)
-                set_ss("pipeline_stage", "input")
-                st.rerun()
-        else:
-            st.sidebar.markdown("*No projects exist yet.*")
-    except Exception as e:
-        st.sidebar.error("Failed to load projects.")
+            try:
+                all_projects = client._get("/projects")
+                if all_projects:
+                    proj_options = {p['id']: f"#{p['id']} - {p['name']}" for p in all_projects}
+                    idx = 0
+                    if project_id and project_id in proj_options:
+                        idx = list(proj_options.keys()).index(project_id)
+                        
+                    selected_id = st.selectbox("Select Project", options=list(proj_options.keys()), format_func=lambda x: proj_options[x], index=idx, label_visibility="collapsed")
+                    
+                    if selected_id != project_id:
+                        set_ss("project_id", selected_id)
+                        set_ss("pipeline_stage", "input")
+                        st.rerun()
+                else:
+                    st.markdown("*No projects exist yet.*")
+            except Exception as e:
+                st.error("Failed to load projects.")
 
-    if st.sidebar.button("➕ New Project", key="strip_new_proj", use_container_width=True):
-        try:
-            name = f"Project-{int(time.time())}"
-            proj = client.create_project(name=name)
-            set_ss("project_id", proj["id"])
-            set_ss("pipeline_stage", "input")
-            set_ss("issues", [])
-            set_ss("artifacts", [])
-            st.rerun()
-        except Exception as e:
-            st.sidebar.error(f"Error: {e}")
+            if st.button("➕ New Project", key="strip_new_proj", use_container_width=True):
+                try:
+                    name = f"Project-{int(time.time())}"
+                    proj = client.create_project(name=name)
+                    set_ss("project_id", proj["id"])
+                    set_ss("pipeline_stage", "input")
+                    set_ss("issues", [])
+                    set_ss("artifacts", [])
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Error: {e}")
+                    
+    with col2:
+        st.markdown(f"**Status:** {status_text}")
+        
+    with col3:
+        st.markdown(f"**Backend:** {provider_text}")
+
+    st.markdown("<hr style='margin-top: 0.5rem; margin-bottom: 1.5rem; opacity: 0.2;'>", unsafe_allow_html=True)
 
 render_status_strip()
 

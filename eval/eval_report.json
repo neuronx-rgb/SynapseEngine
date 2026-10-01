@@ -1,0 +1,311 @@
+{
+  "banner": "MOCK_MODE: LLM stages use fixtures; results reflect deterministic layer only",
+  "planted_flaws": {
+    "per_type_doc_level": {
+      "ambiguity": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "conflict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "incompleteness": {
+        "precision": 0.333,
+        "recall": 0.667,
+        "f1": 0.444
+      }
+    },
+    "per_type_iss_level": {
+      "ambiguity": {
+        "precision": 0.917,
+        "recall": 0.846,
+        "f1": 0.88
+      },
+      "conflict": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "incompleteness": {
+        "precision": 0.125,
+        "recall": 0.333,
+        "f1": 0.182
+      }
+    }
+  },
+  "overall": {
+    "openapi_valid_rate": 1.0,
+    "sql_exec_rate": 1.0,
+    "test_coverage_pct": 86.7
+  },
+  "documents": [
+    {
+      "doc_id": "eval-001",
+      "name": "Email uniqueness conflict",
+      "issues_detected": 3,
+      "ground_truth_count": 1
+    },
+    {
+      "doc_id": "eval-002",
+      "name": "Vague performance terms",
+      "issues_detected": 2,
+      "ground_truth_count": 4
+    },
+    {
+      "doc_id": "eval-003",
+      "name": "Double negation",
+      "issues_detected": 3,
+      "ground_truth_count": 2
+    },
+    {
+      "doc_id": "eval-004",
+      "name": "And/or scope ambiguity",
+      "issues_detected": 2,
+      "ground_truth_count": 2
+    },
+    {
+      "doc_id": "eval-005",
+      "name": "Z3 numeric conflict: order approval threshold",
+      "issues_detected": 0,
+      "ground_truth_count": 1
+    },
+    {
+      "doc_id": "eval-006",
+      "name": "Missing auth requirements",
+      "issues_detected": 0,
+      "ground_truth_count": 1
+    },
+    {
+      "doc_id": "eval-007",
+      "name": "Missing error handling",
+      "issues_detected": 1,
+      "ground_truth_count": 1
+    },
+    {
+      "doc_id": "eval-008",
+      "name": "TBD placeholder",
+      "issues_detected": 3,
+      "ground_truth_count": 2
+    },
+    {
+      "doc_id": "eval-009",
+      "name": "Unclear pronoun",
+      "issues_detected": 2,
+      "ground_truth_count": 1
+    },
+    {
+      "doc_id": "eval-010",
+      "name": "Near-synonym contradiction (free vs no cost)",
+      "issues_detected": 0,
+      "ground_truth_count": 1
+    },
+    {
+      "doc_id": "eval-011",
+      "name": "Should vs must modal weakness",
+      "issues_detected": 2,
+      "ground_truth_count": 2
+    },
+    {
+      "doc_id": "eval-012",
+      "name": "Missing deletion/retention policy",
+      "issues_detected": 2,
+      "ground_truth_count": 1
+    }
+  ],
+  "dataset_real": {
+    "train": {
+      "vague": {
+        "support": 18,
+        "tp": 18,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "duplicate": {
+        "support": 113,
+        "tp": 113,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "inconsistent_target": {
+        "support": 5,
+        "tp": 5,
+        "fp": 3,
+        "fn": 0,
+        "precision": 0.625,
+        "recall": 1.0,
+        "f1": 0.769
+      },
+      "mechanism_mismatch": {
+        "support": 22,
+        "tp": 19,
+        "fp": 0,
+        "fn": 3,
+        "precision": 1.0,
+        "recall": 0.864,
+        "f1": 0.927
+      }
+    },
+    "test": {
+      "vague": {
+        "support": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "duplicate": {
+        "support": 22,
+        "tp": 22,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "inconsistent_target": {
+        "support": 2,
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "mechanism_mismatch": {
+        "support": 4,
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      }
+    }
+  },
+  "fr_nfr_baseline": {
+    "train": {
+      "type_accuracy": 0.9277777777777778,
+      "confusion": {
+        "FR_as_FR": 47,
+        "FR_as_NFR": 0,
+        "NFR_as_NFR": 120,
+        "NFR_as_FR": 13
+      }
+    },
+    "test": {
+      "type_accuracy": 0.8666666666666667,
+      "nfr_category_accuracy": 0.8,
+      "confusion": {
+        "FR_as_FR": 15,
+        "FR_as_NFR": 0,
+        "NFR_as_NFR": 24,
+        "NFR_as_FR": 6
+      },
+      "per_category": {
+        "Performance": {
+          "support": 9,
+          "precision": 1.0,
+          "recall": 0.667,
+          "f1": 0.8
+        },
+        "Security": {
+          "support": 6,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "Usability": {
+          "support": 7,
+          "precision": 1.0,
+          "recall": 0.714,
+          "f1": 0.833
+        },
+        "Reliability": {
+          "support": 1,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "Maintainability": {
+          "support": 5,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "Portability": {
+          "support": 1,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "Scalability": {
+          "support": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "Others": {
+          "support": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "misclassifications": [
+        {
+          "text": "The system shall support multiple languages",
+          "gold": "Non-Functional",
+          "pred": "Functional",
+          "gold_cat": "Usability",
+          "pred_cat": null
+        },
+        {
+          "text": "The system shall support multiple languages",
+          "gold": "Non-Functional",
+          "pred": "Functional",
+          "gold_cat": "Usability",
+          "pred_cat": null
+        },
+        {
+          "text": "Environmental constraints shall be considered",
+          "gold": "Non-Functional",
+          "pred": "Functional",
+          "gold_cat": "Others",
+          "pred_cat": null
+        },
+        {
+          "text": "Database queries shall execute within 2 milliseconds",
+          "gold": "Non-Functional",
+          "pred": "Functional",
+          "gold_cat": "Performance",
+          "pred_cat": null
+        },
+        {
+          "text": "Database queries shall execute within 30 milliseconds",
+          "gold": "Non-Functional",
+          "pred": "Functional",
+          "gold_cat": "Performance",
+          "pred_cat": null
+        },
+        {
+          "text": "Database queries shall execute within 30 milliseconds",
+          "gold": "Non-Functional",
+          "pred": "Functional",
+          "gold_cat": "Performance",
+          "pred_cat": null
+        }
+      ]
+    }
+  }
+}

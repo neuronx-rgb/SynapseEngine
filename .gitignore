@@ -1,33 +1,27 @@
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-.Python
-*.egg-info/
-dist/
-build/
-
-# Virtual environments
-.venv/
-venv/
-env/
-
-# Secrets — NEVER commit
+# Secrets (Never push API keys!)
 .env
 .streamlit/secrets.toml
 
-# Data (SQLite + cache — ephemeral)
-data/
-*.db
+# Heavy Video Files (We only need the extracted frames in static/hero/)
+assets/*.mp4
 
-# Eval output
-eval/eval_report.json
+# Python Caches & Virtual Envs
+__pycache__/
+*.pyc
+venv/
+env/
 
-# IDE
-.idea/
-.vscode/
-*.swp
+# Local Database (Streamlit Cloud is ephemeral, so a local SQLite DB won't persist anyway)
+synapse.db# Secrets
+.env
+.streamlit/secrets.toml
 
-# OS
-.DS_Store
-Thumbs.db
+# Heavy Video Files
+assets/*.mp4
+
+# Python Caches
+__pycache__/
+*.pyc
+
+# Local Database
+synapse.db

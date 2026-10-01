@@ -73,6 +73,6 @@ def render():
         st.markdown("<div style='border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 14px;'><h4>Completeness</h4><p style='opacity:0.7; font-size:0.9em;'>Flags missing edge cases and unhandled error states.</p><p style='color:#22E06B; font-size:0.8em; margin-bottom:0;'>OUTPUT: Completeness warnings</p></div>", unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
-    st.error("Compiler error demo: E0412 Mutually Exclusive Constraints\n\nREQ-001 [UNIQUE email] vs REQ-084 [SHARED email]\n\nBUILD HALTED", icon=":material/gpp_bad:")
+    
 
 render()

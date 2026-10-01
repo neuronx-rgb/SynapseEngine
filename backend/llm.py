@@ -382,8 +382,20 @@ def generate_json(prompt: str, schema: Type[T]) -> T:
     # Deterministic detectors (Z3, lexicon, completeness) already ran and their results
     # are collected by the caller; only the LLM semantic pass is missing.
     logger.error(f"All LLM providers failed. Last error: {last_error}. Returning empty result.")
+    schema_name = schema.__name__
     try:
-        return schema.model_validate({"issues": []})
+        if schema_name == "ParseResult":
+            return schema.model_validate({"requirements": []})
+        elif schema_name == "LLMIssueList":
+            return schema.model_validate({"issues": []})
+        elif schema_name == "OpenAPIGenerateResult":
+            return schema.model_validate({"yaml_content": "", "source_req_ids": []})
+        elif schema_name == "SQLGenerateResult":
+            return schema.model_validate({"ddl_content": "", "source_req_ids": []})
+        elif schema_name == "TestPlanResult":
+            return schema.model_validate({"test_cases": []})
+        else:
+            return schema.model_validate({"issues": []})
     except Exception:
         raise RuntimeError(f"All LLM providers failed. Last error: {last_error}")
 

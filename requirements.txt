@@ -17,3 +17,4 @@ pandas==2.2.3
 openpyxl>=3.1.2
 pytest==8.3.3
 pytest-asyncio==0.24.0
+groq>=0.4.2

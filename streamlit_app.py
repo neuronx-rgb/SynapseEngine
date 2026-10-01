@@ -97,6 +97,28 @@ pg = st.navigation(
     position="hidden"
 )
 
+
+st.markdown('''
+<style>
+    /* Aggressive styling for page links to make them solid green */
+    [data-testid="stPageLink"] {
+        background-color: #22E06B !important;
+        border-radius: 6px !important;
+        padding: 5px !important;
+    }
+    [data-testid="stPageLink"] a {
+        justify-content: center !important;
+        text-decoration: none !important;
+    }
+    [data-testid="stPageLink"] p {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+        margin: 0 !important;
+    }
+</style>
+''', unsafe_allow_html=True)
+
 # Custom Guaranteed Horizontal Navigation Bar
 nav_container = st.container()
 with nav_container:
@@ -136,7 +158,7 @@ def render_status_strip():
         status_text = "🔴 Backend offline"
         provider_text = "Unknown"
 
-    col_proj, col_stat, col_back, _ = st.columns([2, 2, 3, 5])
+    col_proj, _ = st.columns([2, 10])
     
     with col_proj:
         with st.popover("📁 Project"):
@@ -173,12 +195,6 @@ def render_status_strip():
                     st.rerun()
                 except Exception as e:
                     st.error(f"Error: {e}")
-                    
-    with col_stat:
-        st.markdown(f"**Status:** {status_text}")
-        
-    with col_back:
-        st.markdown(f"**Backend:** {provider_text}")
 
 render_status_strip()
 st.markdown("<br>", unsafe_allow_html=True)
